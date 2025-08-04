@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from app.db.database import engine
 from sqlmodel import SQLModel
 
@@ -76,9 +76,9 @@ app = FastAPI(
 )
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello world"}
+@app.post("/")
+async def root(file: UploadFile):
+    return {f"filename: {file.filename}, filesize: {file.size}"}
 
 
 @app.get("/health")

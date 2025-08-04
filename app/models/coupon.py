@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class CouponBase(SQLModel, table=False):
    code: str = Field(default_factory=lambda: str(uuid4()), index=True, unique=True)
-   discount_amount: Decimal
+   discount_amount: int
    min_order_amount: Decimal
    max_uses: int
    used_count: int = Field(default=0)
@@ -24,7 +24,7 @@ class CouponBase(SQLModel, table=False):
    updated_at: Optional[datetime] = None
 
    @property
-   def is_currently_active(self):
+   def is_currently_active(self) -> bool:
       now = datetime.utcnow().date() ## check this line 
       return self.is_active and self.used_count < self.max_uses and self.start_at <= now <= self.end_at
 
