@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from decimal import Decimal
 from sqlmodel import Relationship, SQLModel, Field
 from typing import TYPE_CHECKING, List, Optional
@@ -9,8 +9,7 @@ from app.enums.enums import Province
 
 
 if TYPE_CHECKING:
-   from app.models.shipment_discount import ShipmentDiscount
-   from app.models.order import Order
+   from app.models import ShipmentDiscount, Order
 
 
 class ShipmentBase(SQLModel, table=False):

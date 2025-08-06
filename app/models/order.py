@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING, List, Optional
@@ -7,11 +7,7 @@ from uuid import uuid4, UUID
 from app.enums.enums import Order_Status
 
 if TYPE_CHECKING:
-    from app.models.coupon import Coupon
-    from app.models.shipment import Shipment
-    from app.models.user_profile import UserProfile
-    from app.models.address import Address
-    from app.models.order_item import OrderItem
+    from app.models import Coupon, Shipment, UserProfile, Address, OrderItem
 
 
 def generate_order_number() -> str:

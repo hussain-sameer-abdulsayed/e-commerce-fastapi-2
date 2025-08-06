@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import Optional
-from schemas import BaseSchema
+from .base_schema import BaseSchema
 from uuid import UUID
 from app.enums.enums import Gender
 

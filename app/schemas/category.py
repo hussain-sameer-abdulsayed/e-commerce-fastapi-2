@@ -10,7 +10,7 @@ from .base_schema import BaseSchema
 class CategoryBase(BaseSchema):
    name: str 
    description: str
-   main_image_url: Optional[UploadFile] = None
+   main_image_url: Optional[str] = None
    
 
 
@@ -21,7 +21,7 @@ class CategoryCreate(CategoryBase):
 class CategoryUpdate(CategoryBase):
    name: Optional[str] = None
    description: Optional[str] = None
-   main_image_url: Optional[UploadFile] = None
+   main_image_url: Optional[str] = None
 
 
 class CategoryRead(CategoryBase):

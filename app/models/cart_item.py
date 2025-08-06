@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from datetime import datetime
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
@@ -9,8 +9,7 @@ from uuid import uuid4, UUID
 
 
 if TYPE_CHECKING:
-   from app.models.cart import Cart
-   from app.models.product import Product
+   from app.models import Cart, Product
 
 
 class CartItemBase(SQLModel, table=False):

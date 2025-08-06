@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING, List, Optional
@@ -8,12 +8,7 @@ from decimal import Decimal
 from app.models.product_category import ProductCategoryLink
 
 if TYPE_CHECKING:
-    from app.models.cart_item import CartItem
-    from app.models.product_review import ProductReview
-    from app.models.category import Category
-    from app.models.seller_profile import SellerProfile
-    from app.models.order_item import OrderItem
-    from app.models.product_discount import ProductDiscount
+    from app.models import CartItem, ProductReview, Category, SellerProfile, OrderItem, ProductDiscount
 
 
 class ProductBase(SQLModel, table=False):

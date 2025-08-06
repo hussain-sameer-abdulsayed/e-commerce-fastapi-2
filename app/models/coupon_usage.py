@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from datetime import datetime
 from typing import TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
@@ -7,8 +7,7 @@ from uuid import uuid4, UUID
 
 
 if TYPE_CHECKING:
-   from app.models.coupon import Coupon
-   from app.models.user import User
+   from app.models import Coupon, User
 
 
 

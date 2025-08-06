@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING, Optional
 from uuid import uuid4, UUID
 
 if TYPE_CHECKING:
-   from app.models.product import Product
-   from app.models.order import Order
+   from app.models import Product, Order
 
 
 class OrderItemBase(SQLModel, table=False):

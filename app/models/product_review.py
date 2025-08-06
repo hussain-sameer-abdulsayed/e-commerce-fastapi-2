@@ -1,12 +1,11 @@
-from __future__ import annotations
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING, Optional
 from uuid import uuid4, UUID
 
 if TYPE_CHECKING:
-   from app.models.product import Product
-   from app.models.user_profile import UserProfile
+   from app.models import Product, UserProfile
 
 
 class ProductReviewBase(SQLModel, table=False):

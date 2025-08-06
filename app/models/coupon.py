@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
@@ -6,9 +6,7 @@ from typing import TYPE_CHECKING, List, Optional
 from uuid import uuid4, UUID
 
 if TYPE_CHECKING:
-   from app.models.cart import Cart
-   from app.models.coupon_usage import CouponUsage
-   from app.models.order import Order
+   from app.models import Cart, CouponUsage, Order
 
 
 class CouponBase(SQLModel, table=False):
@@ -25,8 +23,10 @@ class CouponBase(SQLModel, table=False):
 
    @property
    def is_currently_active(self) -> bool:
-      now = datetime.utcnow().date() ## check this line 
-      return self.is_active and self.used_count < self.max_uses and self.start_at <= now <= self.end_at
+      now = datetime.utcnow()  # Keep as datetime
+      return (self.is_active and 
+               self.used_count < self.max_uses and 
+               self.start_at <= now <= self.end_at)
 
 
 class Coupon(CouponBase, table=True):

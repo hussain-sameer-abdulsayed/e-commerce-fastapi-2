@@ -2,26 +2,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile
 from app.db.database import engine
 from sqlmodel import SQLModel
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import all models to ensure they're registered with SQLModel
-from app.models.user import User
-from app.models.user_profile import UserProfile
-from app.models.seller_profile import SellerProfile
-from app.models.address import Address
-from app.models.category import Category
-from app.models.product import Product
-from app.models.product_category import ProductCategoryLink
-from app.models.product_review import ProductReview
-from app.models.product_discount import ProductDiscount
-from app.models.cart import Cart
-from app.models.cart_item import CartItem
-from app.models.coupon import Coupon
-from app.models.coupon_usage import CouponUsage
-from app.models.order import Order
-from app.models.order_item import OrderItem
-from app.models.shipment import Shipment
-from app.models.shipment_discount import ShipmentDiscount
-from app.models.category_discount import CategoryDiscount
+from app.models import (
+    User, UserProfile, SellerProfile, Address, Category, CategoryDiscount,
+    Product, ProductCategoryLink, ProductReview, ProductDiscount,
+    Cart, CartItem, Coupon, CouponUsage, Order, OrderItem,
+    Shipment, ShipmentDiscount
+)
+
+
+from app.routers import api_router
 
 
 @asynccontextmanager
@@ -32,22 +24,6 @@ async def lifespan(app: FastAPI):
     # Startup
     try:
         print("🚀 Starting up E-commerce API...")
-        
-        # Rebuild all models to ensure relationships are properly set up
-        models_to_rebuild = [
-            User, UserProfile, SellerProfile, Address, Category, Product,
-            ProductCategoryLink, ProductReview, ProductDiscount, Cart, 
-            CartItem, Coupon, CouponUsage, Order, OrderItem, Shipment, 
-            ShipmentDiscount, CategoryDiscount
-        ]
-        
-        for model in models_to_rebuild:
-            try:
-                model.model_rebuild()
-            except Exception as e:
-                print(f"⚠️  Warning: Could not rebuild {model.__name__}: {e}")
-        
-        print("✅ Models rebuilt successfully")
         
         # Create database tables
         async with engine.begin() as conn:
@@ -67,6 +43,8 @@ async def lifespan(app: FastAPI):
     # Add any cleanup code here if needed
 
 
+
+
 # Create FastAPI app with lifespan
 app = FastAPI(
     title="E-commerce API",
@@ -76,14 +54,18 @@ app = FastAPI(
 )
 
 
-@app.post("/")
-async def root(file: UploadFile):
-    return {f"filename: {file.filename}, filesize: {file.size}"}
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure this properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.get("/health")
-async def health_check():
-    return {
-        "status": "healthy",
-        "message": "E-commerce API is running successfully"
-    }
+# Include the main API router
+app.include_router(api_router, prefix="/api/v1")
+
+
+

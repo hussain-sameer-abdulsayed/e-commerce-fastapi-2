@@ -1,13 +1,11 @@
-from __future__ import annotations
+
 from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, SQLModel, Relationship
 from uuid import uuid4, UUID
 
 if TYPE_CHECKING:
-   from app.models.address import Address
-   from app.models.user import User
-   from app.models.product import Product
+   from app.models import Address, User, Product
 
    
 

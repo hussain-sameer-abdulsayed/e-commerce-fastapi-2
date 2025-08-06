@@ -1,5 +1,5 @@
 
-from __future__ import annotations
+
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List, Optional, TYPE_CHECKING
@@ -8,9 +8,7 @@ from uuid import uuid4, UUID
 from app.models.product_category import ProductCategoryLink
 
 if TYPE_CHECKING:
-    from app.models.category_discount import CategoryDiscount
-    from app.models.user import User
-    from app.models.product import Product
+    from app.models import CategoryDiscount, Product, User
 
 
 
@@ -31,8 +29,7 @@ class Category(CategoryBase, table=True):
 
     products: List["Product"] = Relationship(
         back_populates="categories", 
-        link_model=ProductCategoryLink, 
-        cascade_delete=True
+        link_model=ProductCategoryLink
         )
 
     category_discounts: List["CategoryDiscount"] = Relationship(

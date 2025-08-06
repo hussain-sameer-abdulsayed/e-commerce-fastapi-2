@@ -37,8 +37,9 @@ class CouponRead(CouponBase):
    is_currently_active: bool
    created_at: datetime
    updated_at: Optional[datetime]
-   coupon_usages = Optional[List["CouponUsageRead"]] = None
+   # coupon_usages = Optional[List["CouponUsageRead"]] = None
 
 
 
-from .coupon_usage import CouponUsageRead
+# from .coupon_usage import CouponUsageRead
+# CouponRead.model_rebuild()

@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List, Optional, TYPE_CHECKING
 from datetime import datetime
@@ -9,9 +9,7 @@ from app.enums.enums import Province
 
 # Use TYPE_CHECKING to avoid circular imports
 if TYPE_CHECKING:
-    from app.models.order import Order
-    from app.models.user import User
-    from app.models.seller_profile import SellerProfile
+    from app.models import Order, SellerProfile, User
 
 
 class AddressBase(SQLModel, table=False):

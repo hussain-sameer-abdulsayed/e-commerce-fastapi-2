@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING, List, Optional
 from datetime import datetime
@@ -6,9 +6,7 @@ from uuid import uuid4, UUID
 from app.enums.enums import Gender
 
 if TYPE_CHECKING:
-   from app.models.product_review import ProductReview
-   from app.models.user import User
-   from app.models.order import Order
+   from app.models import ProductReview, User, Order
 
    
 

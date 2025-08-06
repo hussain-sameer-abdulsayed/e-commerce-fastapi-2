@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 from typing import TYPE_CHECKING
 from uuid import uuid4, UUID
 from sqlmodel import Field, Relationship
@@ -6,7 +6,7 @@ from app.models.discount_base import DiscountBase
 
 
 if TYPE_CHECKING:
-   from app.models.shipment import Shipment
+   from app.models import Shipment
 
 
 class ShipmentDiscount(DiscountBase, table=True):
