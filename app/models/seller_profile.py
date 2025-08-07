@@ -27,9 +27,17 @@ class SellerProfile(SellerProfileBase, table=True):
    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
    user: "User" = Relationship(back_populates="seller_profile")
 
-   addresses: List["Address"] = Relationship(back_populates="seller_profile", cascade_delete=True)
+   addresses: List["Address"] = Relationship(
+      back_populates="seller_profile", 
+      cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
+      )
    
-   products: List["Product"] = Relationship(back_populates="seller_profile", cascade_delete=True)
+   products: List["Product"] = Relationship(
+      back_populates="seller_profile",
+        cascade_delete=True,
+        sa_relationship_kwargs={'lazy': 'selectin'}
+      )
 
 
 

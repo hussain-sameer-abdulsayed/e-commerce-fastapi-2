@@ -27,7 +27,11 @@ class User(UserBase, table=True):
    __tablename__ = "users"
    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
 
-   addresses: List["Address"] = Relationship(back_populates="user", cascade_delete=True)
+   addresses: List["Address"] = Relationship(
+      back_populates="user", 
+      cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
+      )
    coupon_usages: List["CouponUsage"] = Relationship(back_populates="user", cascade_delete=True)
    cart: Optional["Cart"] = Relationship(back_populates="user", cascade_delete=True)
    seller_profile: Optional["SellerProfile"] = Relationship(back_populates="user", cascade_delete=True)

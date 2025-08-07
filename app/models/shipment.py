@@ -27,7 +27,8 @@ class Shipment(ShipmentBase, table=True):
    orders: List["Order"] = Relationship(back_populates="shipment")
    shipment_discounts: List["ShipmentDiscount"] = Relationship(
       back_populates="shipment", 
-      cascade_delete=True
+      cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
    )
 
 

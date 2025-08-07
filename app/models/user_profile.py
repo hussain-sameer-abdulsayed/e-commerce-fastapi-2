@@ -30,7 +30,8 @@ class UserProfile(UserProfileBase, table=True):
    orders: List["Order"] = Relationship(back_populates="user_profile")
    product_reviews: List["ProductReview"] = Relationship(
       back_populates="user_profile", 
-      cascade_delete=True
+      cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
    )
 
 

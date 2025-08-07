@@ -35,12 +35,14 @@ class Product(ProductBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
     product_reviews: List["ProductReview"] = Relationship(
         back_populates="product", 
-        cascade_delete=True
+        cascade_delete=True,
+        sa_relationship_kwargs={'lazy': 'selectin'}
     )
     
     categories: List["Category"] = Relationship(
         back_populates="products", 
-        link_model=ProductCategoryLink
+        link_model=ProductCategoryLink,
+        sa_relationship_kwargs={'lazy': 'selectin'}
         )
 
     order_items: List["OrderItem"] = Relationship(back_populates="product")
@@ -52,7 +54,8 @@ class Product(ProductBase, table=True):
 
     product_discounts: List["ProductDiscount"] = Relationship(
         back_populates="product",
-        cascade_delete=True
+        cascade_delete=True,
+        sa_relationship_kwargs={'lazy': 'selectin'}
         )
 
     seller_profile: "SellerProfile" = Relationship(back_populates="products")

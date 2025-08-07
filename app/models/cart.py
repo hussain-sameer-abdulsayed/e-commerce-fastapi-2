@@ -27,7 +27,8 @@ class Cart(CartBase, table=True):
 
    cart_items: List["CartItem"] = Relationship(
        back_populates="cart", 
-       cascade_delete=True
+       cascade_delete=True,
+       sa_relationship_kwargs={'lazy': 'selectin'}
        )
    coupon: Optional["Coupon"] = Relationship(back_populates="carts")
    user: "User" = Relationship(back_populates="cart")

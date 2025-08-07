@@ -52,7 +52,8 @@ class Order(OrderBase, table=True):
     shipment: "Shipment" = Relationship(back_populates="orders")      
     order_items: List["OrderItem"] = Relationship(
         back_populates="order", 
-        cascade_delete=True
+        cascade_delete=True,
+        sa_relationship_kwargs={'lazy': 'selectin'}
         )
 
    

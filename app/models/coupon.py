@@ -35,7 +35,8 @@ class Coupon(CouponBase, table=True):
 
    coupon_usages: List["CouponUsage"] = Relationship(
       back_populates="coupon", 
-      cascade_delete=True
+      cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
       )
    
    orders: List["Order"] = Relationship(back_populates="coupon")

@@ -29,12 +29,14 @@ class Category(CategoryBase, table=True):
 
     products: List["Product"] = Relationship(
         back_populates="categories", 
-        link_model=ProductCategoryLink
+        link_model=ProductCategoryLink,
+        sa_relationship_kwargs={'lazy': 'selectin'}
         )
 
     category_discounts: List["CategoryDiscount"] = Relationship(
         back_populates="category", 
-        cascade_delete=True
+        cascade_delete=True,
+        sa_relationship_kwargs={'lazy': 'selectin'}
         )
 
     user: "User" = Relationship(back_populates="categories")
