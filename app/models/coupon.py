@@ -19,7 +19,7 @@ class CouponBase(SQLModel, table=False):
    end_at: datetime = Field(index=True)
    is_active: bool = Field(default=True, index=True)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    @property
    def is_currently_active(self) -> bool:

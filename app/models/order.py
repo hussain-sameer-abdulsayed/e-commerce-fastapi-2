@@ -29,7 +29,7 @@ class OrderBase(SQLModel, table=False):
    total: Decimal
    status: Order_Status = Field(default=Order_Status.PENDING)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    coupon_id: Optional[UUID] = Field(default=None, foreign_key="coupons.id")
    shipment_id: UUID = Field(foreign_key="shipments.id")

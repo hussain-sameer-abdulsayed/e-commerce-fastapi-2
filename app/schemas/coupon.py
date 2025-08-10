@@ -20,12 +20,12 @@ class CouponCreate(CouponBase):
    pass
 
 
-class CouponUpdate(CouponBase):
+class CouponUpdate(BaseSchema):
    discount_amount: Optional[int] = None
    min_order_amount: Optional[Decimal] = None
    max_uses: Optional[int] = None
-   start_at: Optional[datetime] = None
-   end_at: Optional[datetime] = None
+   start_at: datetime
+   end_at: datetime
    is_active: Optional[bool] = None
 
 
@@ -35,7 +35,7 @@ class CouponRead(CouponBase):
    used_count: int
    is_currently_active: bool
    created_at: datetime
-   updated_at: Optional[datetime]
+   updated_at: datetime
    # coupon_usages = Optional[List["CouponUsageRead"]] = None
 
 

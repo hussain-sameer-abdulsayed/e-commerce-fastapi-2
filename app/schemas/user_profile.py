@@ -19,11 +19,11 @@ class UserProfileCreate(UserProfileBase):
    user_id: UUID
 
 
-class UserProfileUpdate(UserProfileBase):
+class UserProfileUpdate(BaseSchema):
    main_image_url: Optional[str] = None
    bio: Optional[str] = None
    gender: Optional[Gender] = None 
-   birth_date: Optional[datetime] = None
+   birth_date: datetime
 
 
 
@@ -31,7 +31,7 @@ class UserProfileRead(UserProfileBase):
    id: UUID
    user_id: UUID
    created_at: datetime
-   updated_at: Optional[datetime]
+   updated_at: datetime
    
 
 

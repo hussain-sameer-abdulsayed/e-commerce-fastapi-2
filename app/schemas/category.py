@@ -18,7 +18,7 @@ class CategoryCreate(CategoryBase):
    created_by_id : UUID
 
 
-class CategoryUpdate(CategoryBase):
+class CategoryUpdate(BaseSchema):
    name: Optional[str] = None
    description: Optional[str] = None
    main_image_url: Optional[str] = None
@@ -28,10 +28,16 @@ class CategoryRead(CategoryBase):
    id: UUID
    created_by_id : UUID
    created_at: datetime 
-   updated_at : Optional[datetime] = None
-   products: Optional[List["ProductRead"]] = None
+   updated_at : datetime
+   #products: Optional[List["ProductRead"]] = None
    
 
+class CategoryWithProducts(CategoryRead):
+   products: Optional[List["ProductRead"]] = None
 
-from .product import ProductRead
-CategoryRead.model_rebuild()
+
+try:
+   from .product import ProductRead
+   CategoryWithProducts.model_rebuild()
+except ImportError:
+   pass

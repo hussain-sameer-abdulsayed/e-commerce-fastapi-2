@@ -14,7 +14,7 @@ class OrderItemBase(BaseSchema):
 class OrderItemCreate(OrderItemBase):
    pass
 
-class OrderItemUpdate(OrderItemBase):
+class OrderItemUpdate(BaseSchema):
    quantity: Optional[int] = None
 
 
@@ -23,6 +23,6 @@ class OrderItemRead(OrderItemBase):
    order_id: UUID
    unit_price: Decimal
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
    sub_total: Decimal
 

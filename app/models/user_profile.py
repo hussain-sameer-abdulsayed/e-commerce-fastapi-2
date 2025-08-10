@@ -16,7 +16,7 @@ class UserProfileBase(SQLModel, table=False):
    gender: Gender = Field(default=Gender.MALE)
    birth_date: datetime
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
    
    user_id: UUID = Field(foreign_key="users.id", index=True)
    

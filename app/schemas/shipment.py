@@ -17,7 +17,7 @@ class ShipmentCreate(ShipmentBase):
    pass
 
 
-class ShipmentUpdate(ShipmentBase):
+class ShipmentUpdate(BaseSchema):
    province: Optional[Province] = None
    cost: Optional[Decimal] = None 
 
@@ -28,9 +28,9 @@ class ShipmentRead(ShipmentBase):
    cost: Decimal 
    created_at: datetime
    updated_at: datetime
-   shipment_discounts: Optional[List["ShipmentDiscountRead"]] = None
+   #shipment_discounts: Optional[List["ShipmentDiscountRead"]] = None
 
 
 
-from .shipment_discount import ShipmentDiscountRead
-ShipmentRead.model_rebuild()
+# from .shipment_discount import ShipmentDiscountRead
+# ShipmentRead.model_rebuild()

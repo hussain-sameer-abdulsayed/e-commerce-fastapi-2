@@ -13,7 +13,7 @@ class OrderItemBase(SQLModel, table=False):
    quantity: int
    unit_price: Decimal
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    product_id: UUID = Field(foreign_key="products.id")
    

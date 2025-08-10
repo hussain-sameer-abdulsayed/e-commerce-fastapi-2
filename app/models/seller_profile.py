@@ -17,7 +17,7 @@ class SellerProfileBase(SQLModel, table=False):
    is_verified: bool = Field(default=False)
    is_active: bool = Field(default=True)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    user_id: UUID = Field(foreign_key="users.id", index=True)
 

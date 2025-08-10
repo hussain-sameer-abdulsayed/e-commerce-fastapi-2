@@ -17,14 +17,19 @@ class CartCreate(CartBase):
 
 class CartRead(CartBase):
    id: UUID
-   cart_items: Optional[List["CartItemRead"]] = None
    total: Optional[Decimal] = None
    coupon_id: Optional[UUID] = None
    coupon_amount: Optional[Decimal]  = None
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
 
 
+class CartWithItems(CartRead):
+   cart_items: Optional[List["CartItemRead"]] = None
 
-from .cart_item import CartItemRead
-CartRead.model_rebuild()
+
+try:
+   from .cart_item import CartItemRead
+   CartWithItems.model_rebuild()
+except ImportError:
+   pass

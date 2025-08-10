@@ -16,7 +16,7 @@ class CartItemBase(SQLModel, table=False):
    quantity: int = Field(gt=0)
    unit_price: Decimal = Field(gt=0)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
    cart_id: UUID = Field(foreign_key="carts.id", index=True)

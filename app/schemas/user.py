@@ -19,7 +19,7 @@ class UserCreate(UserBase):
    email: str
 
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseSchema):
    full_name: Optional[str] = None
 
 
@@ -27,12 +27,12 @@ class UserRead(UserBase):
    id: UUID
    user_name: str
    created_at: datetime
-   updated_at: Optional[datetime]
+   updated_at: datetime
    phone_number: str
    email: str
-   addresses: Optional[List["AddressRead"]] = None
+   #addresses: Optional[List["AddressRead"]] = None
 
 
 
-from .address import AddressRead
-UserRead.model_rebuild()
+# from .address import AddressRead
+# UserRead.model_rebuild()

@@ -18,7 +18,7 @@ class CategoryDiscountCreate(CategoryDiscountBase):
    pass
 
 
-class CategoryDiscountUpdate(CategoryDiscountBase):
+class CategoryDiscountUpdate(BaseSchema):
    category_id: Optional[UUID] = None
    discount_amount: Optional[int] = None
    is_active: Optional[bool] = None
@@ -29,7 +29,7 @@ class CategoryDiscountUpdate(CategoryDiscountBase):
 class CategoryDiscountRead(CategoryDiscountBase):
    id: UUID
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
    is_currently_active: bool
 
 

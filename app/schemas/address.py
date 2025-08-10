@@ -21,7 +21,7 @@ class AddressCreate(AddressBase):
    pass
 
 
-class AddressUpdate(AddressBase):
+class AddressUpdate(BaseSchema):
    province: Optional[Province] = None
    city: Optional[str] = None
    street: Optional[str] = None
@@ -36,7 +36,7 @@ class AddressRead(AddressBase):
    user_id : Optional[UUID] = None
    seller_profile_id: Optional[UUID] = None
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
 
 
 

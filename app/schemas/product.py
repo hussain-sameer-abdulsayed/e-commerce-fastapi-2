@@ -14,28 +14,27 @@ class ProductBase(BaseSchema):
    description: str
    main_image_url: str
    seller_profile_id: UUID
-   category_ids: List[UUID]
+   ##category_ids: List[UUID]
 
 class ProductCreate(ProductBase):
    pass
 
 
-class ProductUpdate(ProductBase):
+class ProductUpdate(BaseSchema):
    name: Optional[str] = None
    price: Optional[Decimal] = None
    stock_quantity: Optional[int] = None
    description: Optional[str] = None
    main_image_url: Optional[str] = None
-   category_ids: Optional[List[UUID]] = None
+   ##category_ids: Optional[List[UUID]] = None
 
 
 
 class ProductRead(ProductBase):
    id: UUID
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
    is_available: bool
-   
 
 
 

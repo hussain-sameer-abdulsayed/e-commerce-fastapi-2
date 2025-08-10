@@ -16,7 +16,7 @@ class CartBase(SQLModel, table=False):
    total: Optional[Decimal] = None
    coupon_amount:  Optional[Decimal] = None
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    user_id: UUID = Field(foreign_key="users.id", index=True, unique=True)
    coupon_id: Optional[UUID] = Field(default=None, foreign_key="coupons.id")

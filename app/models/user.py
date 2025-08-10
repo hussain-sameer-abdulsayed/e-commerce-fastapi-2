@@ -17,7 +17,7 @@ class UserBase(SQLModel, table=False):
    password_hash: str
    
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 

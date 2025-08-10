@@ -14,7 +14,7 @@ class CartItemCreate(CartItemBase):
    pass
 
 
-class CartItemUpdate(CartItemBase):
+class CartItemUpdate(BaseSchema):
    quantity: Optional[int] = None
 
 
@@ -24,5 +24,5 @@ class CartItemRead(CartItemBase):
    unit_price: Decimal
    total: Decimal
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
 

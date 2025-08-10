@@ -17,7 +17,7 @@ class ProductReviewCreate(ProductReviewBase):
    product_id: UUID
 
 
-class ProductReviewUpdate(ProductReviewBase):
+class ProductReviewUpdate(BaseSchema):
    rating : Optional[int] = None
    comment: Optional[str] = None
 
@@ -27,7 +27,7 @@ class ProductReviewRead(ProductReviewBase):
    product_id: UUID
    is_approved: bool
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
 
 
 

@@ -16,7 +16,7 @@ class ShipmentBase(SQLModel, table=False):
    province: Province = Field(default=Province.BAGHDAD)
    cost: Decimal = Field(gt=0)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 

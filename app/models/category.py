@@ -17,7 +17,7 @@ class CategoryBase(SQLModel, table=False):
     description: str
     main_image_url: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: Optional[datetime] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     created_by_id: UUID = Field(default=None, foreign_key="users.id")
     

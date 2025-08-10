@@ -10,8 +10,8 @@ from sqlmodel import select, func
 
 from app.models.category import Category
 from app.repositories.category_repository import CategoryRepository
-from app.schemas.category import CategoryCreate, CategoryRead, CategoryUpdate
-
+from app.schemas.category import CategoryCreate, CategoryRead, CategoryUpdate, CategoryWithProducts
+from app.models.user import User
 
 
 class CategoryService:
@@ -25,20 +25,30 @@ class CategoryService:
       return [CategoryRead.model_validate(category) for category in categories]
    
 
-   async def get_category_by_id(self, category_id: UUID, inclue_products: bool = False) -> CategoryRead:
+   async def get_all_categories_with_products(self) -> List[CategoryWithProducts]:
+      categories = await self.repository.get_all_with_products()
+      return [CategoryWithProducts.model_validate(category) for category in categories]
+
+
+   async def get_category_by_id(self, category_id: UUID, inclue_products: bool = False) -> CategoryRead | CategoryWithProducts:
       if inclue_products:
          category = await self.repository.get_with_products(category_id)
-      else:
-         category = await self.repository.get_by_id(category_id)
-
-      if not category:
-         raise HTTPException(
+         if not category:
+            raise HTTPException(
             status_code= status.HTTP_404_NOT_FOUND,
             detail="Category not found"
-         )
+            )
+         return CategoryWithProducts.model_validate(category)
+
+      else:
+         category = await self.repository.get_by_id(category_id)
+         if not category:
+            raise HTTPException(
+               status_code= status.HTTP_404_NOT_FOUND,
+               detail="Category not found"
+            )
+         return CategoryRead.model_validate(category)
       
-      return CategoryRead.model_validate(category)
-   
 
    async def get_category_by_name(self, category_name: str) -> CategoryRead:
       category = await self.repository.get_by_name(category_name)
@@ -75,14 +85,18 @@ class CategoryService:
 
    
    async def create_category(self, user_id: UUID, category_data: CategoryCreate) -> CategoryRead:
-      # check user if exists, by user repo
-      if category_data.created_by_id:
-         user = await self.userRepository.get_by_id(category_data.created_by_id)
+
+
+      if user_id:
+         user = await self.db.get(User, user_id)
          if not user:
             raise HTTPException(
-               status_code= status.HTTP_400_BAD_REQUEST,
-               detail= "user does not exists"
-            )
+                  status_code=status.HTTP_400_BAD_REQUEST,
+                  detail="User does not exist"
+                )
+
+
+
       # check category name if exists
       if await self.repository.exists_by_name(category_data.name):
          raise HTTPException(
@@ -108,10 +122,11 @@ class CategoryService:
       
       update_dict = update_data.model_dump(exclude_unset= True)
       if "name" in update_dict and update_dict["name"] != category.name:
-         if await self.repository.exists_by_name(update_dict["name"], exclude_id= category_id):
+         exists = await self.repository.exists_by_name(update_dict["name"], exclude_id= category_id)
+         if exists:
             raise HTTPException(
                status_code= status.HTTP_409_CONFLICT,
-               detail= f"Category with name '{update_data['name']}' already exists"
+               detail= f"Category with name {update_dict['name']} already exists"
             )
 
       ## update fields
@@ -134,4 +149,7 @@ class CategoryService:
          )
 
       return True
+
+
+
 

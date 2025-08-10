@@ -13,7 +13,7 @@ class ProductReviewBase(SQLModel, table=False):
    comment: Optional[str] = None
    is_approved: bool = Field(default=False)
    created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: Optional[datetime] = None
+   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    product_id: UUID = Field(foreign_key="products.id", index=True)
    user_profile_id: UUID = Field(foreign_key="user_profiles.id", index=True)

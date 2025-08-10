@@ -24,7 +24,7 @@ class OrderCreate(OrderBase):
    status: Optional[Order_Status] = Order_Status.PENDING
 
 
-class OrderUpdate(OrderBase):
+class OrderUpdate(BaseSchema):
     address_id: Optional[UUID] = None
     ship_to_province: Optional[str] = None
     ship_to_city: Optional[str] = None
@@ -42,13 +42,17 @@ class OrderRead(OrderBase):
     sub_total: Decimal
     shipping_cost: Decimal
     total: Decimal
-    order_items: List["OrderItemRead"]
     status: Order_Status
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime
 
 
+class OrderWithItems(OrderRead):
+    order_items: List["OrderItemRead"]
 
 
-from .order_item import OrderItemRead
-OrderRead.model_rebuild()
+try:
+    from .order_item import OrderItemRead
+    OrderRead.model_rebuild()
+except ImportError:
+    pass

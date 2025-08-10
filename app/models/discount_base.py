@@ -11,7 +11,7 @@ class DiscountBase(SQLModel, table=False):  # Keep table=False for base class
     start_at: date
     end_at: date
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: Optional[datetime] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     @property
     def is_currently_active(self) -> bool:

@@ -19,7 +19,7 @@ class SellerProfileCreate(SellerProfileBase):
 
 
 
-class SellerProfileUpdate(SellerProfileBase):
+class SellerProfileUpdate(BaseSchema):
    store_name: Optional[str] = None
    store_description: Optional[str] = None
    main_image_url: Optional[str] = None
@@ -32,13 +32,14 @@ class SellerProfileRead(SellerProfileBase):
    is_verified: bool
    is_active: bool
    created_at: datetime
-   updated_at: Optional[datetime]
-   addresses: Optional[List["AddressRead"]] = None
-   products: Optional[List["ProductRead"]] = None
+   updated_at: datetime
+   # addresses: Optional[List["AddressRead"]] = None
+   # products: Optional[List["ProductRead"]] = None
 
 
-from .address import AddressRead
-from .product import ProductRead
-SellerProfileRead.model_rebuild()
+
+# from .address import AddressRead
+# from .product import ProductRead
+# SellerProfileRead.model_rebuild()
 
 

@@ -18,7 +18,7 @@ class ShipmentDiscountCreate(ShipmentDiscountBase):
    pass
 
 
-class ShipmentDiscountUpdate(ShipmentDiscountBase):
+class ShipmentDiscountUpdate(BaseSchema):
    shipment_id: Optional[UUID] = None
    discount_amount: Optional[int] = None
    is_active: Optional[bool] = None
@@ -29,5 +29,5 @@ class ShipmentDiscountUpdate(ShipmentDiscountBase):
 class ShipmentDiscountRead(ShipmentDiscountBase):
    id: UUID
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
    is_currently_active: bool

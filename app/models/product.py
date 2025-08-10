@@ -19,7 +19,7 @@ class ProductBase(SQLModel, table=False):
     main_image_url: str
     
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: Optional[datetime] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     @property
     def is_available(self) -> bool:

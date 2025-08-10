@@ -18,17 +18,17 @@ class ProductDiscountCreate(ProductDiscountBase):
    pass
 
 
-class ProductDiscountUpdate(ProductDiscountBase):
+class ProductDiscountUpdate(BaseSchema):
    discount_amount: Optional[int] = None
    is_active: Optional[bool] = None
-   start_at: Optional[datetime] = None
-   end_at: Optional[datetime] = None
+   start_at: datetime
+   end_at: datetime
 
 
 class ProductDiscountRead(ProductDiscountBase):
    id: UUID
    created_at: datetime
-   updated_at: Optional[datetime] = None
+   updated_at: datetime
    is_currently_active: bool
 
 

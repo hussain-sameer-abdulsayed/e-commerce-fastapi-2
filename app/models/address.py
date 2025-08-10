@@ -22,7 +22,7 @@ class AddressBase(SQLModel, table=False):
     is_store_address: bool = Field(default=False)
     is_shipment_address: bool = Field(default=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: Optional[datetime] = None
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Foreign key relationships
     user_id: Optional[UUID] = Field(default=None, foreign_key="users.id", index=True)

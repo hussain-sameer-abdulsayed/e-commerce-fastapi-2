@@ -14,7 +14,7 @@ api_router = APIRouter()
 # Prefix is defined HERE, not in individual routers
 api_router.include_router(
     category_router,
-    #prefix="/categories",  # This is the ONLY place to define the prefix
+    prefix="/categories",  # This is the ONLY place to define the prefix
     tags=["Categories"]    # Consistent tag naming
 )
 
