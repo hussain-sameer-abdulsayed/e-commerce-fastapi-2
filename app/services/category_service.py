@@ -147,7 +147,8 @@ class CategoryService:
             detail="Category not found"
          )
 
-      return True
+      return result
+
 
 
 

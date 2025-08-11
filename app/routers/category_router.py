@@ -84,7 +84,7 @@ async def create_category(
 
 
 
-@router.put("/{category_id}", response_model=CategoryRead, status_code=status.HTTP_200_OK)
+@router.put("/{category_id}", response_model=CategoryRead, status_code=status.HTTP_202_ACCEPTED)
 async def update_category(
     category_id: UUID,
     category_update: CategoryUpdate,

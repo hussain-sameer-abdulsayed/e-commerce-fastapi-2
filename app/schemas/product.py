@@ -15,10 +15,11 @@ class ProductBase(BaseSchema):
    stock_quantity: int = 0
    description: str
    main_image_url: str
-   seller_profile_id: UUID
+   # seller_profile_id: Optional[UUID] = None
 
 class ProductCreate(ProductBase):
    category_ids: List[UUID]
+   seller_profile_id: UUID
 
 
 class ProductUpdate(BaseSchema):
@@ -33,6 +34,7 @@ class ProductUpdate(BaseSchema):
 
 class ProductRead(ProductBase):
    id: UUID
+   seller_profile_id: UUID
    created_at: datetime
    updated_at: datetime
    is_available: bool

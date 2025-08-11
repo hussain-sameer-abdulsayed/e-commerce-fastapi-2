@@ -6,14 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from sqlalchemy.orm import selectinload
 
+from app.models.category import Category
 from app.models.product import Product
+from .category_repository import CategoryRepository
 
+category_repository = CategoryRepository()
 
 class ProductRepository:
    def __init__(self, db: AsyncSession):
       self.db = db
 
-   async def get_all(self, only_available: Optional[bool] =False) -> List[Product]:
+   async def get_all(self, only_available: bool =False) -> List[Product]:
       statement = select(Product).order_by(Product.name)
       if only_available:
          statement = statement.where(Product.is_available == True)
@@ -43,7 +46,7 @@ class ProductRepository:
       return result.scalar_one_or_none()
    
 
-   async def get_by_category_id(self, category_id: UUID, only_available: Optional[bool] =False) -> List[Product]:
+   async def get_by_category_id(self, category_id: UUID, only_available: bool = False) -> List[Product]:
       statement = (
          select(Product)
          .join(Product.categories)
@@ -57,7 +60,7 @@ class ProductRepository:
       return list(result.scalars().all())
 
 
-   async def get_by_seller_id(self, seller_id: UUID, only_available: Optional[bool] =False) -> List[Product]:
+   async def get_by_seller_id(self, seller_id: UUID, only_available: bool = False) -> List[Product]:
       statement = (
          select(Product)
          .where(Product.seller_profile_id == seller_id)
@@ -70,7 +73,7 @@ class ProductRepository:
       return list(result.scalars().all())
    
 
-   async def search_by_name(self, text: str, only_available: Optional[bool] =False) -> List[Product]:
+   async def search(self, text: str, only_available: bool = False) -> List[Product]:
       statement = (
          select(Product)
          .where(
@@ -88,7 +91,7 @@ class ProductRepository:
       return list(result.scalars().all())
 
 
-   async def full_text_search(self, search_text: str, only_available: Optional[bool] =False) -> List[Product]:
+   async def full_text_search(self, search_text: str, only_available: bool =False) -> List[Product]:
         # Prepare the search term for prefix matching
         search_terms = " & ".join(
             f"{term}:*" for term in search_text.strip().split()
@@ -119,6 +122,7 @@ class ProductRepository:
 
 
    async def create(self, product: Product) -> Product:
+
       self.db.add(product)
       await self.db.execute()
       await self.db.refresh(product)
@@ -131,7 +135,7 @@ class ProductRepository:
       await self.db.execute()
       await self.db.refresh(product)
       return product
-
+   
 
    async def delete(self, id: UUID) -> bool:
       product = await self.get_by_category_id(id)
@@ -150,6 +154,8 @@ class ProductRepository:
       result = await self.db.execute(statement)
       product = result.first()
       return product is not None
+
+
 
 
 

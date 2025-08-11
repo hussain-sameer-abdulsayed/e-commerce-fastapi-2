@@ -131,5 +131,13 @@ class CategoryRepository:
       return category is not None
 
 
+   async def get_by_ids(self, ids: List[UUID]) -> List[Category]:
+      statement = select(Category).where(Category.id.in_(ids))
+      result = await self.db.execute(statement)
+      return list(result.scalars().all())
+
+   
+
+
 
    
