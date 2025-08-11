@@ -2,6 +2,8 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
+
+
 from .base_schema import BaseSchema
 from uuid import UUID
 
@@ -14,10 +16,9 @@ class ProductBase(BaseSchema):
    description: str
    main_image_url: str
    seller_profile_id: UUID
-   ##category_ids: List[UUID]
 
 class ProductCreate(ProductBase):
-   pass
+   category_ids: List[UUID]
 
 
 class ProductUpdate(BaseSchema):
@@ -26,7 +27,7 @@ class ProductUpdate(BaseSchema):
    stock_quantity: Optional[int] = None
    description: Optional[str] = None
    main_image_url: Optional[str] = None
-   ##category_ids: Optional[List[UUID]] = None
+   category_ids: Optional[List[UUID]] = None
 
 
 
@@ -37,6 +38,12 @@ class ProductRead(ProductBase):
    is_available: bool
 
 
-
+class ProductWithCategories(ProductRead):
+   categories: List[CategoryRead]
 
       
+try:
+   from app.schemas.category import CategoryRead
+   ProductWithCategories.model_rebuild()
+except ImportError:
+   pass

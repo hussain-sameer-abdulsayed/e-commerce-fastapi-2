@@ -97,7 +97,6 @@ class CategoryRepository:
     return list(result.scalars().all())
 
 
-
    async def create(self, category:Category) -> Category:
       self.db.add(category)
       await self.db.commit()
@@ -106,7 +105,6 @@ class CategoryRepository:
 
 
    async def update(self, category: Category) -> Category:
-
       category.updated_at = datetime.utcnow()
       self.db.add(category)
       await self.db.commit()
@@ -129,7 +127,7 @@ class CategoryRepository:
          statement = statement.where(Category.id != exclude_id)
          
       result = await self.db.execute(statement)
-      category = result.first()  # Fixed: Use .first() to handle duplicates gracefully
+      category = result.first()
       return category is not None
 
 

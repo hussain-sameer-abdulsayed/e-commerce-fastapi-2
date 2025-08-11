@@ -18,11 +18,6 @@ async def get_category_service(db: AsyncSession = Depends(get_db)) -> CategorySe
    return CategoryService(db)
 
 
-async def get_category_service(db: AsyncSession = Depends(get_db)) -> CategoryService:
-    return CategoryService(db)
-
-
-
 @router.get("/", response_model=List[CategoryRead], status_code=status.HTTP_200_OK)
 async def get_categories(
     search: Optional[str] = Query(None, description="Search by name"),
