@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
-
+from pydantic import computed_field
 
 from .base_schema import BaseSchema
 from uuid import UUID
@@ -37,7 +37,12 @@ class ProductRead(ProductBase):
    seller_profile_id: UUID
    created_at: datetime
    updated_at: datetime
-   is_available: bool
+
+   @computed_field
+   @property
+   def is_available(self) -> bool:
+      return self.stock_quantity > 0
+   
 
 
 class ProductWithCategories(ProductRead):

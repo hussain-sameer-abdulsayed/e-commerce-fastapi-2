@@ -5,12 +5,7 @@ from sqlalchemy import or_, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 from sqlalchemy.orm import selectinload
-
-from app.models.category import Category
 from app.models.product import Product
-from .category_repository import CategoryRepository
-
-category_repository = CategoryRepository()
 
 class ProductRepository:
    def __init__(self, db: AsyncSession):
@@ -19,7 +14,7 @@ class ProductRepository:
    async def get_all(self, only_available: bool =False) -> List[Product]:
       statement = select(Product).order_by(Product.name)
       if only_available:
-         statement = statement.where(Product.is_available == True)
+         statement = statement.where(Product.stock_quantity > 0)
       result = await self.db.execute(statement)
       return list(result.scalars().all())
 
@@ -54,7 +49,7 @@ class ProductRepository:
          .order_by(Product.name)
       )
       if only_available:
-         statement = statement.where(Product.is_available == True)
+         statement = statement.where(Product.stock_quantity > 0)
 
       result = await self.db.execute(statement)
       return list(result.scalars().all())
@@ -67,7 +62,7 @@ class ProductRepository:
          .order_by(Product.name)
       )
       if only_available:
-         statement = statement.where(Product.is_available == True)
+         statement = statement.where(Product.stock_quantity > 0)
 
       result = await self.db.execute(statement)
       return list(result.scalars().all())
@@ -85,7 +80,7 @@ class ProductRepository:
          .order_by(Product.name)
       )
       if only_available:
-         statement = statement.where(Product.is_available == True)
+         statement = statement.where(Product.stock_quantity > 0)
 
       result = await self.db.execute(statement)
       return list(result.scalars().all())
@@ -115,7 +110,7 @@ class ProductRepository:
             )
         )
         if only_available:
-         statement = statement.where(Product.is_available == True) 
+         statement = statement.where(Product.stock_quantity > 0) 
 
         result = await self.db.execute(statement)
         return list(result.scalars().all())
@@ -124,7 +119,7 @@ class ProductRepository:
    async def create(self, product: Product) -> Product:
 
       self.db.add(product)
-      await self.db.execute()
+      await self.db.commit()
       await self.db.refresh(product)
       return product
 
@@ -132,13 +127,13 @@ class ProductRepository:
    async def update(self, product: Product) -> Product:
       product.updated_at = datetime.utcnow()
       self.db.add(product)
-      await self.db.execute()
+      await self.db.commit()
       await self.db.refresh(product)
       return product
    
 
    async def delete(self, id: UUID) -> bool:
-      product = await self.get_by_category_id(id)
+      product = await self.get_by_id(id)
       if product:
          await self.db.delete(product)
          await self.db.commit()

@@ -28,7 +28,7 @@ class ProductService:
       if not products:
          raise HTTPException(
             status_code= status.HTTP_404_NOT_FOUND,
-            detail= "There is not products"
+            detail= "There are no products"
          )
       return [ProductRead.model_validate(product) for product in products]
 
@@ -68,7 +68,7 @@ class ProductService:
       if not products:
          raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "There is no products"
+            detail = "There are no products"
          )
       return [ProductRead.model_validate(product) for product in products]
 
@@ -79,7 +79,7 @@ class ProductService:
       if not products:
          raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "There is no products"
+            detail = "There are no products"
          )
       return [ProductRead.model_validate(product) for product in products] 
 
@@ -88,7 +88,7 @@ class ProductService:
       if not text.strip():
          raise HTTPException(
             status_code= status.HTTP_400_BAD_REQUEST,
-            detail= "please enter a text"
+            detail= "Please enter a text"
          )
       
       text = text.strip()

@@ -53,7 +53,7 @@ class CategoryRepository:
     return result.scalar_one_or_none()
    
 
-   async def search_by_name(self, text: str) -> List[Category]:
+   async def search(self, text: str) -> List[Category]:
       statement = (
          select(Category)
          .where(

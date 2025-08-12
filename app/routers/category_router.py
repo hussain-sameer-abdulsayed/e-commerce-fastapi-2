@@ -29,14 +29,12 @@ async def get_categories(
     return await service.get_all_categories()
 
 
-
 @router.get("/with-products", response_model=List[CategoryWithProducts], status_code=status.HTTP_200_OK)
 async def get_categories_with_products(
     service: CategoryService = Depends(get_category_service)
 ):
     """Get all categories WITH products"""
     return await service.get_all_categories_with_products()
-
 
 
 @router.get("/search", response_model=List[CategoryRead], status_code=status.HTTP_200_OK)
@@ -47,7 +45,6 @@ async def search_categories(
 ):
     """Search categories by name or description WITHOUT products"""
     return await service.search_categories(q, full_text)
-
 
 
 @router.get("/{category_id}", status_code=status.HTTP_200_OK)
@@ -63,7 +60,6 @@ async def get_category(
     return await service.get_category_by_id(category_id, include_products)
 
 
-
 @router.get("/name/{category_name}", response_model=CategoryRead, status_code=status.HTTP_200_OK)
 async def get_category_by_name(
     category_name: str,
@@ -71,7 +67,6 @@ async def get_category_by_name(
 ):
     """Get category by name WITHOUT products"""
     return await service.get_category_by_name(category_name)
-
 
 
 @router.post("/", response_model=CategoryRead, status_code=status.HTTP_201_CREATED)
@@ -83,8 +78,7 @@ async def create_category(
     return await service.create_category(category.created_by_id, category)
 
 
-
-@router.put("/{category_id}", response_model=CategoryRead, status_code=status.HTTP_202_ACCEPTED)
+@router.put("/{category_id}", response_model=CategoryRead, status_code=status.HTTP_200_OK)
 async def update_category(
     category_id: UUID,
     category_update: CategoryUpdate,
@@ -92,7 +86,6 @@ async def update_category(
 ):
     """Update category"""
     return await service.update_category(category_id, category_update)
-
 
 
 @router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -107,4 +100,6 @@ async def delete_category(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Category not found"
         )
+
+
 

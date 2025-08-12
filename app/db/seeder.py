@@ -58,7 +58,7 @@ class DatabaseSeeder:
       for user in created_users:
          await self.db.refresh(user)
 
-      print(f"Created {len(created_users)} users")
+      print(f"✅ Created {len(created_users)} users")
       return created_users
    
 
@@ -103,7 +103,7 @@ class DatabaseSeeder:
       for created_profile in created_profiles:
          await self.db.refresh(created_profile)
 
-      print(f"Craeted {len(created_profiles)} user profiles")
+      print(f"✅ Craeted {len(created_profiles)} user profiles")
       return created_profiles
 
 
@@ -135,7 +135,7 @@ class DatabaseSeeder:
       await self.db.commit()
       await self.db.refresh(profile)
 
-      print(f"Craeted user profile")
+      print(f"✅ Craeted user profiles")
       return profile
 
 

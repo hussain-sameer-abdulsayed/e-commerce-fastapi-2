@@ -74,10 +74,10 @@ class CategoryService:
             categories = await self.repository.full_text_search(search_text)
          except:
             # Fallback to ILIKE search if full-text search fails
-            categories = await self.repository.search_by_name(search_text)
+            categories = await self.repository.search(search_text)
 
       else:
-         categories = await self.repository.search_by_name(search_text)
+         categories = await self.repository.search(search_text)
       
 
       return [CategoryRead.model_validate(category) for category in categories]

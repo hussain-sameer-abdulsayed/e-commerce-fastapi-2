@@ -17,13 +17,8 @@ class ProductBase(SQLModel, table=False):
     stock_quantity: int = Field(default=0)
     description: str
     main_image_url: str
-    
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-    @property
-    def is_available(self) -> bool:
-        return self.stock_quantity > 0
     
     seller_profile_id: UUID = Field(foreign_key="seller_profiles.id", index=True)
     
