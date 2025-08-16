@@ -4,6 +4,7 @@ from fastapi import APIRouter
 # Import all route modules
 from .category_router import router as category_router
 from .product_router import router as product_router
+from .cart_router import router as cart_router
 
 
 # Create main API router
@@ -22,7 +23,11 @@ api_router.include_router(
    tags=["Products"]
 )
 
-
+api_router.include_router(
+   cart_router,
+   prefix="/carts",
+   tags=["Carts"]
+)
 
 
 

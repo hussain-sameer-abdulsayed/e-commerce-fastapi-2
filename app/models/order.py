@@ -23,7 +23,7 @@ class OrderBase(SQLModel, table=False):
    ship_to_city: str
    ship_to_street: str
    ship_to_contact: str
-   coupon_amount: Optional[Decimal] = None
+   coupon_amount: Optional[Decimal] = Decimal("0.00")
    sub_total: Decimal
    shipping_cost: Decimal
    total: Decimal

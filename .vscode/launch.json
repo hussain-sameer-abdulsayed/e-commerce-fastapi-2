@@ -2,20 +2,39 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug FastAPI",
+      "name": "FastAPI Debug (WORKING)",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["app.main:app", "--host", "127.0.0.1", "--port", "8000"],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "stopOnEntry": false,
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe"
+    },
+    {
+      "name": "FastAPI with Reload (NO DEBUG)",
       "type": "python",
       "request": "launch",
       "module": "uvicorn",
       "args": [
-        "app.main:app", // path to your app's ASGI instance
-        "--reload", // auto-reload when code changes
+        "app.main:app",
+        "--reload",
         "--host",
         "127.0.0.1",
         "--port",
         "8000"
       ],
-      "jinja": true,
-      "justMyCode": true
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
     }
   ]
 }

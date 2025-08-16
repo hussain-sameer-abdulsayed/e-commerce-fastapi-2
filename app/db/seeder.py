@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
 from .database import engine, AsyncSessionLocal
-from app.models import User, UserProfile, SellerProfile, Category, Product, ProductCategoryLink, Coupon, Shipment
+from app.models import User, UserProfile, SellerProfile, Category, Product, ProductCategoryLink, Coupon, Shipment, Cart
 from app.enums.enums import Province, Gender
 
 
@@ -61,6 +61,31 @@ class DatabaseSeeder:
       print(f"✅ Created {len(created_users)} users")
       return created_users
    
+   
+   async def seed_carts(self, users: list[User]) -> list[Cart]:
+      if not users or len(users) < 2:
+         print("⚠️ Not enough users to create carts, skipping...")
+         return None
+      
+      carts_data = [
+         {
+            "user_id": users[0].id
+         },
+         {
+            "user_id": users[1].id
+         }
+      ]
+
+      created_carts = []
+      for cart_data in carts_data:
+         cart = Cart(**cart_data)
+         self.db.add(cart)
+         created_carts.append(cart)
+      
+      await self.db.commit()
+      print(f"✅ Created {len(created_carts)} carts")
+      return created_carts
+
 
    async def seed_user_profiles(self, users: list[User]) -> UserProfile:
       if not users or len(users) < 2:
@@ -379,6 +404,7 @@ class DatabaseSeeder:
 
       try:
          users = await self.seed_users()
+         await self.seed_carts(users)
          await self.seed_user_profiles(users)
          seller_profile = await self.seed_seller_profiles(users)
          categories = await self.seed_categories(users[0] if users else None)

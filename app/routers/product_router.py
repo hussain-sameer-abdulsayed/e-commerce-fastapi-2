@@ -94,7 +94,7 @@ async def update_product(
    return await service.update_product(seller_id= seller_id, product_id= product_id, update_data= product_update)
 
 
-@router.delete("/{product_id}", status_code= status.HTTP_204_NO_CONTENT)
+@router.delete("/{product_id}", response_model= bool, status_code= status.HTTP_200_OK)
 async def delete_product(
    product_id: UUID,
    service: ProductService = Depends(get_product_service)

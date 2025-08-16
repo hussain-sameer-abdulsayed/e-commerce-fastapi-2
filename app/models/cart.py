@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 class CartBase(SQLModel, table=False):
-   total: Optional[Decimal] = None
-   coupon_amount:  Optional[Decimal] = None
+   total: Optional[Decimal] = Decimal("0.00")
+   coupon_amount:  Optional[Decimal] = Decimal("0.00")
    created_at: datetime = Field(default_factory=datetime.utcnow)
    updated_at: datetime = Field(default_factory=datetime.utcnow)
 

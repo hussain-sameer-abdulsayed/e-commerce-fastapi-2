@@ -88,18 +88,12 @@ async def update_category(
     return await service.update_category(category_id, category_update)
 
 
-@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{category_id}", response_model= bool, status_code=status.HTTP_200_OK)
 async def delete_category(
     category_id: UUID,
     service: CategoryService = Depends(get_category_service)
 ):
-    """Delete category"""
-    success = await service.delete_category(category_id)
-    if not success:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Category not found"
-        )
+    return await service.delete_category(category_id)
 
 
 

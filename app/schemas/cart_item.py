@@ -3,11 +3,15 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 from uuid import UUID
+
+from pydantic import Field, computed_field
+
+from app.schemas.product import ProductRead
 from .base_schema import BaseSchema
 
 
 class CartItemBase(BaseSchema):
-   quantity: int
+   quantity: int = Field(gt=0, le=999, description="Quantity must be between 1 and 999")
    product_id: UUID
 
 class CartItemCreate(CartItemBase):
@@ -15,14 +19,28 @@ class CartItemCreate(CartItemBase):
 
 
 class CartItemUpdate(BaseSchema):
-   quantity: Optional[int] = None
+   quantity: int = Field(gt=0, le=999, description="Quantity must be between 1 and 999")
 
 
 class CartItemRead(CartItemBase):
    id: UUID
    cart_id: UUID
-   unit_price: Decimal
-   total: Decimal
+   unit_price: Decimal = Field(ge=0, description="Unit price must be non-negative")
    created_at: datetime
    updated_at: datetime
 
+   @computed_field
+   @property
+   def total(self) -> Decimal:
+      return self.unit_price * self.quantity
+
+
+class CartItemWithProduct(CartItemRead):
+   product: ProductRead
+
+
+try:
+   from .product import ProductRead
+   CartItemWithProduct.model_rebuild()
+except ImportError:
+   pass
