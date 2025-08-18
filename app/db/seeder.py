@@ -69,10 +69,16 @@ class DatabaseSeeder:
       
       carts_data = [
          {
-            "user_id": users[0].id
+            "user_id": users[0].id,
+            "total": Decimal("0.00"),
+            "coupon_amount" : Decimal("0.00"),
+            "cart_items": []
          },
          {
-            "user_id": users[1].id
+            "user_id": users[1].id,
+            "total": Decimal("0.00"),
+            "coupon_amount" : Decimal("0.00"),
+            "cart_items": []
          }
       ]
 

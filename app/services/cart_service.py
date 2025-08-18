@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
@@ -94,7 +95,28 @@ class CartService:
             detail="Product not found"
          )
       
-      await self.__validate_cart_item(cart_item_data.quantity, product.stock_quantity)
+      
+      existing_cart_item = await self.repository.get_cart_item_by_product(cart_id, cart_item_data.product_id)
+
+
+      # Product exists - increase quantity
+      if existing_cart_item:
+         new_quantity = existing_cart_item.quantity + cart_item_data.quantity
+
+         await self.__validate_cart_item(new_quantity, product.stock_quantity)
+
+         existing_cart_item.quantity = new_quantity
+         existing_cart_item.total
+         existing_cart_item.updated_at = datetime.utcnow()
+
+         updated_cart_item = await self.repository.update_cart_item(existing_cart_item)
+
+         return CartItemRead.model_validate(updated_cart_item)
+      
+
+      # Product doesn't exist - create new cart item
+      else:
+         await self.__validate_cart_item(cart_item_data.quantity, product.stock_quantity)
       
       cart_item = CartItem(
          cart_id= cart_id,
@@ -106,6 +128,7 @@ class CartService:
       created_cart_item = await self.repository.add_cart_item(cart_item)
 
       return CartItemRead.model_validate(created_cart_item)
+
 
 
    async def update_cart_item(self, cart_item_id: UUID, update_data: CartItemUpdate) -> CartItemRead:
@@ -126,6 +149,7 @@ class CartService:
       await self.__validate_cart_item(update_data.quantity, product.stock_quantity)
       
       cart_item.quantity = update_data.quantity
+      cart_item.updated_at = datetime.utcnow()
       updated_cart_item = await self.repository.update_cart_item(cart_item)
       return CartItemRead.model_validate(updated_cart_item)
       
