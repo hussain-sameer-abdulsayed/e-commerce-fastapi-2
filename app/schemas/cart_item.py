@@ -1,16 +1,15 @@
 from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 from uuid import UUID
 
 from pydantic import Field, computed_field
 
 from app.schemas.product import ProductRead
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema
 
 
-class CartItemBase(BaseSchema):
+class CartItemBase(BaseSchemaConfig):
    quantity: int = Field(gt=0, le=999, description="Quantity must be between 1 and 999")
    product_id: UUID
 
@@ -18,16 +17,13 @@ class CartItemCreate(CartItemBase):
    pass
 
 
-class CartItemUpdate(BaseSchema):
+class CartItemUpdate(BaseSchemaConfig):
    quantity: int = Field(gt=0, le=999, description="Quantity must be between 1 and 999")
 
 
-class CartItemRead(CartItemBase):
-   id: UUID
+class CartItemRead(CartItemBase, BaseSchema):
    cart_id: UUID
    unit_price: Decimal = Field(ge=0, description="Unit price must be non-negative")
-   created_at: datetime
-   updated_at: datetime
 
    @computed_field
    @property

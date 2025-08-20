@@ -1,19 +1,18 @@
 
 from decimal import Decimal
-from sqlmodel import SQLModel, Field, Relationship
-from datetime import datetime
+from sqlmodel import Field, Relationship
 from typing import TYPE_CHECKING, Optional
-from uuid import uuid4, UUID
+from uuid import UUID
+
+from app.models.base_model import BaseModel
 
 if TYPE_CHECKING:
    from app.models import Product, Order
 
 
-class OrderItemBase(SQLModel, table=False):
+class OrderItemBase(BaseModel, table=False):
    quantity: int
    unit_price: Decimal
-   created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    product_id: UUID = Field(foreign_key="products.id")
    
@@ -26,8 +25,7 @@ class OrderItemBase(SQLModel, table=False):
 
 
 class OrderItem(OrderItemBase, table=True):
-   __tablename__ = "order_items"
-   id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+   __tablename__ = "order_items" # type: ignore
 
    product: "Product" = Relationship(back_populates="order_items")
    order: Optional["Order"] = Relationship(back_populates="order_items")

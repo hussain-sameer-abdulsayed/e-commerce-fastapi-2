@@ -4,7 +4,7 @@ from .cart import CartCreate, CartRead, CartWithItems
 from .category_discount import CategoryDiscountCreate, CategoryDiscountUpdate, CategoryDiscountRead
 from .category import CategoryCreate, CategoryRead, CategoryUpdate, CategoryWithProducts
 from .coupon_usage import CouponUsageCreate, CouponUsageRead
-from .coupon import CouponCreate, CouponRead, CouponUpdate
+from .coupon import CouponCreate, CouponRead, CouponUpdate, CouponSetStatus
 from .order_item import OrderItemCreate, OrderItemRead, OrderItemUpdate
 from .order import OrderCreate, OrderRead, OrderUpdate, OrderWithItems
 from .product_discount import ProductDiscountCreate, ProductDiscountRead, ProductDiscountUpdate
@@ -20,7 +20,7 @@ from .user import UserCreate, UserRead, UserUpdate
 # Exported schemas for easy importing
 __all__ = [
     # Base
-    "BaseSchema",
+    "BaseSchemaConfig",
     
     # User
     "UserBase", "UserCreate", "UserUpdate", "UserRead",
@@ -51,6 +51,7 @@ __all__ = [
     # Coupon
     "CouponBase", "CouponCreate", "CouponUpdate", "CouponRead",
     "CouponUsageBase", "CouponUsageCreate", "CouponUsageRead",
+    "CouponSetStatus"
     
     # Shipment
     "ShipmentBase", "ShipmentCreate", "ShipmentUpdate", "ShipmentRead",

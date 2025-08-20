@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.cart import Cart
 from app.models.cart_item import CartItem
+from app.repositories.coupon_repository import CouponRepository
 from app.schemas.cart import CartCreate, CartRead, CartWithItems
 from app.schemas.cart_item import CartItemCreate, CartItemRead, CartItemUpdate, CartItemWithProduct
 from app.repositories.cart_repository import CartRepository
@@ -18,6 +19,7 @@ class CartService:
       self.db = db
       self.repository = CartRepository(db)
       self.product_repository = ProductRepository(db)
+      self.coupon_repository = CouponRepository(db)
 
 
    async def __validate_cart_item(self, quantity:int, stock_quantity:int):
@@ -130,7 +132,6 @@ class CartService:
       return CartItemRead.model_validate(created_cart_item)
 
 
-
    async def update_cart_item(self, cart_item_id: UUID, update_data: CartItemUpdate) -> CartItemRead:
       cart_item = await self.repository.get_cart_item_by_id(cart_item_id)
       if not cart_item:
@@ -150,6 +151,7 @@ class CartService:
       
       cart_item.quantity = update_data.quantity
       cart_item.updated_at = datetime.utcnow()
+
       updated_cart_item = await self.repository.update_cart_item(cart_item)
       return CartItemRead.model_validate(updated_cart_item)
       
@@ -174,6 +176,30 @@ class CartService:
       return result
 
 
+   async def apply_coupon_to_cart(self, cart_id: UUID, coupon_code: UUID) -> CartRead:
+      coupon = await self.coupon_repository.get_by_code(coupon_code)
+      if not coupon or coupon.is_currently_active == False:
+         raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail= "Coupon does not exists or expired"
+         )
+      
+      cart = await self.repository.get_cart_by_id(cart_id)
+      if not cart or not cart.cart_items:
+         raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail= "Cart not found or crt is empty"
+         )
+      
+      if cart.total and cart.total < coupon.min_order_amount:
+         raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail= f"The minimum total amout is {coupon.min_order_amount}, your total is {cart.total}"
+         )
+
+      cart.updated_at = datetime.utcnow()
+      updated_cart = await self.repository.apply_coupon_to_cart(coupon, cart)
+      return CartRead.model_validate(updated_cart)
 
 
 

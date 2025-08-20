@@ -3,11 +3,11 @@ from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
-from .base_schema import BaseSchema
-from pydantic import Field, validator, computed_field
+from .base_schema import BaseSchemaConfig, BaseSchema
+from pydantic import computed_field
 
 
-class CartBase(BaseSchema):
+class CartBase(BaseSchemaConfig):
    user_id: UUID
 
 
@@ -15,13 +15,10 @@ class CartCreate(CartBase):
    pass
 
 
-class CartRead(CartBase):
-   id: UUID
+class CartRead(CartBase, BaseSchema):
    total: Optional[Decimal] = None
    coupon_id: Optional[UUID] = None
    coupon_amount: Optional[Decimal]  = None
-   created_at: datetime
-   updated_at: datetime
 
    @computed_field
    @property

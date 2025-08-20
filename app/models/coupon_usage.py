@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 from uuid import uuid4, UUID
-
+from app.models.base_model import utc_now_naive
 
 
 if TYPE_CHECKING:
@@ -12,22 +12,15 @@ if TYPE_CHECKING:
 
 
 class CouponUsageBase(SQLModel, table=False):
-   __tablename__ = "coupon_usages"
-   id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
-   used_at: datetime = Field(default_factory=datetime.utcnow)
-
+   used_at: datetime = Field(default_factory= utc_now_naive)
 
    user_id: UUID = Field(foreign_key="users.id", index=True)
-   
-
-
    coupon_id: UUID = Field(foreign_key="coupons.id", index=True)
    
 
 
-
 class CouponUsage(CouponUsageBase, table=True):
-   __tablename__ = "coupon_usages"
+   __tablename__ = "coupon_usages" # type: ignore
    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
 
    coupon: "Coupon" = Relationship(back_populates="coupon_usages")

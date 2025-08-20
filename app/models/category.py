@@ -1,10 +1,10 @@
 
 
-from datetime import datetime
-from sqlmodel import SQLModel, Field, Relationship
-from typing import List, Optional, TYPE_CHECKING
-from uuid import uuid4, UUID
+from sqlmodel import Field, Relationship
+from typing import List, TYPE_CHECKING
+from uuid import UUID
 
+from app.models.base_model import BaseModel
 from app.models.product_category import ProductCategoryLink
 
 if TYPE_CHECKING:
@@ -12,20 +12,17 @@ if TYPE_CHECKING:
 
 
 
-class CategoryBase(SQLModel, table=False):
+class CategoryBase(BaseModel, table=False):
     name: str = Field(index=True)
     description: str
     main_image_url: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     created_by_id: UUID = Field(default=None, foreign_key="users.id")
     
 
 
 class Category(CategoryBase, table=True):
-    __tablename__ = "categories"
-    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    __tablename__ = "categories" # type: ignore
 
     products: List["Product"] = Relationship(
         back_populates="categories", 

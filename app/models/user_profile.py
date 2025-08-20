@@ -1,30 +1,28 @@
 
-from sqlmodel import SQLModel, Field, Relationship
-from typing import TYPE_CHECKING, List, Optional
-from datetime import datetime
-from uuid import uuid4, UUID
+from sqlmodel import Field, Relationship
+from typing import TYPE_CHECKING, List
+from datetime import date
+from uuid import UUID
 from app.enums.enums import Gender
+from app.models.base_model import BaseModel
 
 if TYPE_CHECKING:
    from app.models import ProductReview, User, Order
 
    
 
-class UserProfileBase(SQLModel, table=False):
+class UserProfileBase(BaseModel, table=False):
    main_image_url: str
    bio: str
    gender: Gender = Field(default=Gender.MALE)
-   birth_date: datetime
-   created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: datetime = Field(default_factory=datetime.utcnow)
+   birth_date: date
    
    user_id: UUID = Field(foreign_key="users.id", index=True)
    
 
 
 class UserProfile(UserProfileBase, table=True):
-   __tablename__ = "user_profiles"
-   id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+   __tablename__ = "user_profiles" # type: ignore
 
    user: "User" = Relationship(back_populates="user_profile")
    orders: List["Order"] = Relationship(back_populates="user_profile")

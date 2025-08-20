@@ -2,37 +2,31 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
 from pydantic import Field
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
 
 
 
 
-class UserBase(BaseSchema):
+class UserBase(BaseSchemaConfig):
    full_name: str
    
 
 class UserCreate(UserBase):
-   password: str = Field(min_length=6)
-   phone_number: str
+   password: str = Field(min_length=6, max_length=100)
+   phone_number: str = Field(max_length=14, min_length=11)
    email: str
 
 
-class UserUpdate(BaseSchema):
+class UserUpdate(BaseSchemaConfig):
    full_name: Optional[str] = None
 
 
-class UserRead(UserBase):
-   id: UUID
+class UserRead(UserBase, BaseSchema):
    user_name: str
-   created_at: datetime
-   updated_at: datetime
    phone_number: str
    email: str
-   #addresses: Optional[List["AddressRead"]] = None
 
 
 
-# from .address import AddressRead
-# UserRead.model_rebuild()

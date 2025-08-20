@@ -4,12 +4,12 @@ from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
 from app.enums.enums import Order_Status
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema
 
 
 
 
-class OrderBase(BaseSchema):
+class OrderBase(BaseSchemaConfig):
    address_id: UUID
    ship_to_province: str
    ship_to_city: str
@@ -24,7 +24,7 @@ class OrderCreate(OrderBase):
    status: Optional[Order_Status] = Order_Status.PENDING
 
 
-class OrderUpdate(BaseSchema):
+class OrderUpdate(BaseSchemaConfig):
     address_id: Optional[UUID] = None
     ship_to_province: Optional[str] = None
     ship_to_city: Optional[str] = None
@@ -33,8 +33,7 @@ class OrderUpdate(BaseSchema):
     shipment_id: Optional[UUID] = None
 
 
-class OrderRead(OrderBase):
-    id: UUID
+class OrderRead(OrderBase, BaseSchema):
     user_profile_id: UUID
     order_number: str
     coupon_id: Optional[UUID] = None
@@ -43,8 +42,6 @@ class OrderRead(OrderBase):
     shipping_cost: Decimal
     total: Decimal
     status: Order_Status
-    created_at: datetime
-    updated_at: datetime
 
 
 class OrderWithItems(OrderRead):

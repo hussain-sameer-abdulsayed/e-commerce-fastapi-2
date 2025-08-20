@@ -1,5 +1,5 @@
-import asyncio
-from datetime import datetime
+
+from datetime import datetime, date
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
@@ -16,7 +16,7 @@ class DatabaseSeeder:
 
    async def get_existing_users(self) -> list[User]:
       """Get existing users from database"""
-      result = await self.db.execute(select(User).order_by(User.created_at))
+      result = await self.db.execute(select(User).order_by(User.created_at))# type: ignore
       return list(result.scalars().all())
 
 
@@ -49,7 +49,7 @@ class DatabaseSeeder:
 
       created_users = []
       for user_data in users_data:
-         user = User(**user_data)
+         user = User(**user_data)# type: ignore
          self.db.add(user)
          created_users.append(user)
 
@@ -65,7 +65,7 @@ class DatabaseSeeder:
    async def seed_carts(self, users: list[User]) -> list[Cart]:
       if not users or len(users) < 2:
          print("⚠️ Not enough users to create carts, skipping...")
-         return None
+         return None# type: ignore
       
       carts_data = [
          {
@@ -96,7 +96,7 @@ class DatabaseSeeder:
    async def seed_user_profiles(self, users: list[User]) -> UserProfile:
       if not users or len(users) < 2:
             print("⚠️ Not enough users to create profiles, skipping...")
-            return None
+            return None# type: ignore
         
         # Check if profiles already exist
       result = await self.db.execute(select(UserProfile))
@@ -111,14 +111,14 @@ class DatabaseSeeder:
             "bio": "Admin user created with seeding",
             "main_image_url": "https://example.com/john.jpg",
             "gender": Gender.MALE,
-            "birth_date": datetime(1990, 1, 1)
+            "birth_date": date(1990, 1, 1)
          },
          {
             "user_id": users[1].id,
             "bio": "Backend developer created with seeding",
             "main_image_url": "https://example.com/john.jpg",
             "gender": Gender.MALE,
-            "birth_date": datetime(2003, 8, 3)
+            "birth_date": date(2003, 8, 3)
          }
       ]
 
@@ -135,7 +135,7 @@ class DatabaseSeeder:
          await self.db.refresh(created_profile)
 
       print(f"✅ Craeted {len(created_profiles)} user profiles")
-      return created_profiles
+      return created_profiles# type: ignore
 
 
    async def seed_seller_profiles(self, users: list[User]) -> SellerProfile:
@@ -143,7 +143,7 @@ class DatabaseSeeder:
 
       if not users or len(users) < 2:
             print("⚠️ Not enough users to create seller profile, skipping...")
-            return None
+            return None# type: ignore
         
         # Check if seller profile already exists
       result = await self.db.execute(select(SellerProfile))
@@ -367,42 +367,42 @@ class DatabaseSeeder:
 
    
    async def seed_coupons(self):
-      print("______Seeding coupons______")
+    print("______Seeding coupons______")
 
-      # Check if coupons already exist
-      result = await self.db.execute(select(Coupon))
-      if result.first():
-         print("🎫 Coupons already exist, skipping...")
-         return
+    # Check if coupons already exist
+    result = await self.db.execute(select(Coupon))
+    if result.first():
+        print("🎫 Coupons already exist, skipping...")
+        return
 
-
-      coupons_data = [
-         {
-            "code": "WELCOME50",
+    # IMPORTANT: Remove ALL timezone information
+    coupons_data = [
+        {
+           
             "discount_amount": 50,
             "min_order_amount": Decimal("50000.00"),
             "max_uses": 100,
-            "start_at": datetime.utcnow(),
-            "end_at": datetime(2025, 10, 10),
+            "start_at": datetime.utcnow(),           # ✅ NAIVE UTC datetime
+            "end_at": datetime(2025, 10, 10),       # ✅ NAIVE datetime
             "is_active": True
-         },
-         {
-            "code": "SAVE20",
+        },
+        {
+           
             "discount_amount": 10,
             "min_order_amount": Decimal("100000.00"),
             "max_uses": 50,
-            "start_at": datetime.utcnow(),
-            "end_at": datetime(2026, 8, 7),
+            "start_at": datetime.utcnow(),           # ✅ NAIVE UTC datetime  
+            "end_at": datetime(2026, 8, 7),         # ✅ NAIVE datetime
             "is_active": True
-         }
-      ]
+        }
+    ]
 
-      for coupon_data in coupons_data:
-         coupon = Coupon(**coupon_data)
-         self.db.add(coupon)
-      
-      await self.db.commit()
-      print(f"✅ Created {len(coupons_data)} coupons")
+    for coupon_data in coupons_data:
+        coupon = Coupon(**coupon_data)
+        self.db.add(coupon)
+    
+    await self.db.commit()
+    print(f"✅ Created {len(coupons_data)} coupons")
 
 
    async def seed_all(self):
@@ -413,7 +413,7 @@ class DatabaseSeeder:
          await self.seed_carts(users)
          await self.seed_user_profiles(users)
          seller_profile = await self.seed_seller_profiles(users)
-         categories = await self.seed_categories(users[0] if users else None)
+         categories = await self.seed_categories(users[0] if users else None) # type: ignore
          await self.seed_products(categories, seller_profile)
          await self.seed_shipments()
          await self.seed_coupons()
@@ -431,9 +431,15 @@ class DatabaseSeeder:
 
 async def seed_database():
    """ main seeding function """
-   async with AsyncSessionLocal() as db:
+   async with AsyncSessionLocal() as db: # type: ignore
       seeder = DatabaseSeeder(db)
       await seeder.seed_all()
+
+
+
+
+
+
 
 
 

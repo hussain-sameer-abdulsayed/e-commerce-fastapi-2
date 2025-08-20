@@ -14,6 +14,8 @@ from app.models.cart import Cart
 from app.models.cart_item import CartItem
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.coupon import Coupon
+
 
 
 
@@ -137,6 +139,18 @@ class CartRepository:
 
          return True
       return False
+
+
+   async def apply_coupon_to_cart(self, coupon: Coupon, cart: Cart) ->  Cart:
+      cart.coupon_id = coupon.id
+      cart.coupon_amount = coupon.discount_amount * (cart.total or Decimal(0.00) / Decimal("100.00"))
+      
+      self.db.add(cart)
+      await self.db.commit()
+
+      await self.db.refresh(cart)
+      
+      return cart
 
 
    async def clear_cart(self, cart_id: UUID) -> bool:

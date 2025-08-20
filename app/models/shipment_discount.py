@@ -1,6 +1,6 @@
 
 from typing import TYPE_CHECKING
-from uuid import uuid4, UUID
+from uuid import UUID
 from sqlmodel import Field, Relationship
 from app.models.discount_base import DiscountBase
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ShipmentDiscount(DiscountBase, table=True):
-   __tablename__ = "shipment_discounts"
+   __tablename__ = "shipment_discounts" # type: ignore
    shipment_id: UUID = Field(foreign_key="shipments.id", index=True)
    shipment : "Shipment" = Relationship(back_populates="shipment_discounts")
 

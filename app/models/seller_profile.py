@@ -1,30 +1,29 @@
 
-from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional
-from sqlmodel import Field, SQLModel, Relationship
-from uuid import uuid4, UUID
+from typing import TYPE_CHECKING, List
+from sqlmodel import Field, Relationship
+from uuid import UUID
+
+from app.models.base_model import BaseModel
 
 if TYPE_CHECKING:
    from app.models import Address, User, Product
 
    
 
-class SellerProfileBase(SQLModel, table=False):
+class SellerProfileBase(BaseModel, table=False):
    store_name: str
    store_description: str
    main_image_url: str
    store_phone_number: str
    is_verified: bool = Field(default=False)
    is_active: bool = Field(default=True)
-   created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    user_id: UUID = Field(foreign_key="users.id", index=True)
 
 
 class SellerProfile(SellerProfileBase, table=True):
-   __tablename__ = "seller_profiles"
-   id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+   __tablename__ = "seller_profiles" # type: ignore
+   
    user: "User" = Relationship(back_populates="seller_profile")
 
    addresses: List["Address"] = Relationship(

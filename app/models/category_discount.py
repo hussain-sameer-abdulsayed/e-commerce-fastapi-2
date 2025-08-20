@@ -1,6 +1,6 @@
 
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, TYPE_CHECKING
+from sqlmodel import Field, Relationship
+from typing import TYPE_CHECKING
 from uuid import UUID
 from app.models.discount_base import DiscountBase
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class CategoryDiscount(DiscountBase, table=True):
-   __tablename__ = "category_discounts"
+   __tablename__ = "category_discounts" # type: ignore
    category_id: UUID = Field(foreign_key="categories.id", index=True)
    category : "Category" = Relationship(back_populates="category_discounts")
 

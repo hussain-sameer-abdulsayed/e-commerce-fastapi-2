@@ -1,23 +1,24 @@
 
 from decimal import Decimal
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import Field, Relationship
 from typing import TYPE_CHECKING, List, Optional
-from datetime import datetime
+from datetime import date
 from uuid import uuid4, UUID
 from app.enums.enums import Order_Status
+from app.models.base_model import BaseModel
 
 if TYPE_CHECKING:
     from app.models import Coupon, Shipment, UserProfile, Address, OrderItem
 
 
 def generate_order_number() -> str:
-    today = datetime.today()
+    today = date.today()
     # Generate a 6-digit number from UUID (more unique than random)
     unique_number = str(uuid4())[-6:].zfill(6)
     return f"{today.year}-{today.month}-{today.day}-{unique_number}"
 
 
-class OrderBase(SQLModel, table=False):
+class OrderBase(BaseModel, table=False):
    order_number: str = Field(default_factory=generate_order_number, index=True, unique=True)
    ship_to_province: str
    ship_to_city: str
@@ -28,8 +29,6 @@ class OrderBase(SQLModel, table=False):
    shipping_cost: Decimal
    total: Decimal
    status: Order_Status = Field(default=Order_Status.PENDING)
-   created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
    coupon_id: Optional[UUID] = Field(default=None, foreign_key="coupons.id")
    shipment_id: UUID = Field(foreign_key="shipments.id")
@@ -44,8 +43,8 @@ class OrderBase(SQLModel, table=False):
 
 
 class Order(OrderBase, table=True):
-    __tablename__ = "orders"
-    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    __tablename__ = "orders" # type: ignore
+    
     address: "Address" = Relationship(back_populates="orders")
     user_profile: "UserProfile" = Relationship(back_populates="orders")
     coupon: Optional["Coupon"] = Relationship(back_populates="orders")

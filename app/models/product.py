@@ -1,33 +1,28 @@
 
-from datetime import datetime
-from sqlmodel import SQLModel, Field, Relationship
-from typing import TYPE_CHECKING, List, Optional
-from uuid import uuid4, UUID
+from sqlmodel import Field, Relationship
+from typing import TYPE_CHECKING, List
+from uuid import UUID
 from decimal import Decimal
 
+from app.models.base_model import BaseModel
 from app.models.product_category import ProductCategoryLink
 
 if TYPE_CHECKING:
     from app.models import CartItem, ProductReview, Category, SellerProfile, OrderItem, ProductDiscount
 
 
-class ProductBase(SQLModel, table=False):
+class ProductBase(BaseModel, table=False):
     name: str = Field(index=True)
-    price: Decimal
-    stock_quantity: int = Field(default=0)
+    price: Decimal = Field(gt=0.00)
+    stock_quantity: int = Field(default=0, ge=0)
     description: str
     main_image_url: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    
     seller_profile_id: UUID = Field(foreign_key="seller_profiles.id", index=True)
-    
-    
 
 
 class Product(ProductBase, table=True):
-    __tablename__ = "products"
-    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+    __tablename__ = "products" # type: ignore
+    
     product_reviews: List["ProductReview"] = Relationship(
         back_populates="product", 
         cascade_delete=True,

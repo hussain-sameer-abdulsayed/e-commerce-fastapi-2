@@ -2,17 +2,17 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
-from pydantic import computed_field
+from pydantic import Field, computed_field
 
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
 
 
-class ProductBase(BaseSchema):
+class ProductBase(BaseSchemaConfig):
    name: str
-   price: Decimal
-   stock_quantity: int = 0
+   price: Decimal = Field(gt=0.00)
+   stock_quantity: int = Field(default=0, ge=0)
    description: str
    main_image_url: str
    # seller_profile_id: Optional[UUID] = None
@@ -22,21 +22,18 @@ class ProductCreate(ProductBase):
    seller_profile_id: UUID
 
 
-class ProductUpdate(BaseSchema):
+class ProductUpdate(BaseSchemaConfig):
    name: Optional[str] = None
-   price: Optional[Decimal] = None
-   stock_quantity: Optional[int] = None
+   price: Optional[Decimal] = Field(None, gt=0.00)
+   stock_quantity: Optional[int] = Field(None, ge=0)
    description: Optional[str] = None
    main_image_url: Optional[str] = None
    category_ids: Optional[List[UUID]] = None
 
 
 
-class ProductRead(ProductBase):
-   id: UUID
+class ProductRead(ProductBase, BaseSchema):
    seller_profile_id: UUID
-   created_at: datetime
-   updated_at: datetime
 
    @computed_field
    @property

@@ -1,13 +1,14 @@
 from __future__ import annotations
-from datetime import datetime
 from typing import Optional
-from .base_schema import BaseSchema
+
+from pydantic import Field
+from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
 
 
-class ProductReviewBase(BaseSchema):
-   rating: int
+class ProductReviewBase(BaseSchemaConfig):
+   rating: int = Field(ge=1, le=5)
    comment: Optional[str] = None
 
 
@@ -17,17 +18,14 @@ class ProductReviewCreate(ProductReviewBase):
    product_id: UUID
 
 
-class ProductReviewUpdate(BaseSchema):
-   rating : Optional[int] = None
+class ProductReviewUpdate(BaseSchemaConfig):
+   rating : Optional[int] = Field(None, ge=1, le=5)
    comment: Optional[str] = None
 
-class ProductReviewRead(ProductReviewBase):
-   id: UUID
+class ProductReviewRead(ProductReviewBase, BaseSchema):
    user_profile_id: UUID
    product_id: UUID
    is_approved: bool
-   created_at: datetime
-   updated_at: datetime
 
 
 

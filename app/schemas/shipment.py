@@ -1,36 +1,28 @@
 from __future__ import annotations
-from datetime import datetime
 from decimal import Decimal
-from typing import List, Optional
-from .base_schema import BaseSchema
+from typing import Optional
+
+from pydantic import Field
+from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 from app.enums.enums import Province
 
 
 
-class ShipmentBase(BaseSchema):
+class ShipmentBase(BaseSchemaConfig):
    province: Province
-   cost: Decimal 
+   cost: Decimal = Field(ge=0.00, le=25000.00)
    
 
 class ShipmentCreate(ShipmentBase):
    pass
 
 
-class ShipmentUpdate(BaseSchema):
+class ShipmentUpdate(BaseSchemaConfig):
    province: Optional[Province] = None
-   cost: Optional[Decimal] = None 
+   cost: Optional[Decimal] = Field(None, ge=0.00, le=25000.00)
 
 
-class ShipmentRead(ShipmentBase):
-   id: UUID
+class ShipmentRead(ShipmentBase, BaseSchema):
    province: Province
-   cost: Decimal 
-   created_at: datetime
-   updated_at: datetime
-   #shipment_discounts: Optional[List["ShipmentDiscountRead"]] = None
 
-
-
-# from .shipment_discount import ShipmentDiscountRead
-# ShipmentRead.model_rebuild()

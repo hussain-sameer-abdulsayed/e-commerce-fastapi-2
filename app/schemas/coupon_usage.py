@@ -1,10 +1,10 @@
 from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig
 
 
-class CouponUsageBase(BaseSchema):
+class CouponUsageBase(BaseSchemaConfig):
    user_id: UUID
    coupon_id: UUID
 
@@ -18,4 +18,6 @@ class CouponUsageRead(CouponUsageBase):
    used_at: datetime
 
 
-
+   class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True

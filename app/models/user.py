@@ -1,31 +1,26 @@
 
-from datetime import datetime
-from sqlmodel import Relationship, SQLModel, Field
+from sqlmodel import Relationship, Field
 from typing import TYPE_CHECKING, List, Optional
-from uuid import uuid4, UUID
+from uuid import uuid4
+
+from app.models.base_model import BaseModel
 
 
 if TYPE_CHECKING:
    from app.models import SellerProfile, Address, CouponUsage, Cart, UserProfile, Category
 
 
-class UserBase(SQLModel, table=False):
+class UserBase(BaseModel, table=False):
    user_name: str = Field(default_factory=lambda: str(uuid4()),index=True, unique=True)
    full_name: str
    phone_number: str
    email: str = Field(index=True)
    password_hash: str
-   
-   created_at: datetime = Field(default_factory=datetime.utcnow)
-   updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-
 
 
 
 class User(UserBase, table=True):
-   __tablename__ = "users"
-   id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
+   __tablename__ = "users" # type: ignore
 
    addresses: List["Address"] = Relationship(
       back_populates="user", 

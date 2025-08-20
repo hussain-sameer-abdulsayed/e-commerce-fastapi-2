@@ -1,33 +1,29 @@
 from __future__ import annotations
-from datetime import date, datetime
-from decimal import Decimal
+from datetime import datetime
 from typing import Optional
-from .base_schema import BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
 
-class ShipmentDiscountBase(BaseSchema):
+class ShipmentDiscountBase(BaseSchemaConfig):
    shipment_id: UUID
    discount_amount: int
    is_active: bool = True
-   start_at: date
-   end_at: date
+   start_at: datetime
+   end_at: datetime
 
 
 class ShipmentDiscountCreate(ShipmentDiscountBase):
    pass
 
 
-class ShipmentDiscountUpdate(BaseSchema):
+class ShipmentDiscountUpdate(BaseSchemaConfig):
    shipment_id: Optional[UUID] = None
    discount_amount: Optional[int] = None
    is_active: Optional[bool] = None
-   start_at: Optional[date] = None
-   end_at: Optional[date] = None
+   start_at: Optional[datetime] = None
+   end_at: Optional[datetime] = None
 
 
-class ShipmentDiscountRead(ShipmentDiscountBase):
-   id: UUID
-   created_at: datetime
-   updated_at: datetime
+class ShipmentDiscountRead(ShipmentDiscountBase, BaseSchema):
    is_currently_active: bool

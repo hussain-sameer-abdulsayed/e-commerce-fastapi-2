@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class ProductDiscount(DiscountBase, table=True):
-   __tablename__ = "product_discounts"
+   __tablename__ = "product_discounts" # type: ignore
    product_id: UUID = Field(foreign_key="products.id", index=True)
    product : "Product" = Relationship(back_populates="product_discounts")
 
