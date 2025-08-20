@@ -6,6 +6,7 @@ from .category_router import router as category_router
 from .product_router import router as product_router
 from .cart_router import router as cart_router
 from .coupon_router import router as coupon_router
+from .address_router import router as address_router
 
 
 # Create main API router
@@ -34,6 +35,12 @@ api_router.include_router(
    coupon_router,
    prefix="/coupons",
    tags=["Coupons"]
+)
+
+api_router.include_router(
+   address_router,
+   prefix="/addresses",
+   tags=["Addresses"]
 )
 
 

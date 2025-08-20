@@ -18,7 +18,8 @@ class AddressBase(BaseSchemaConfig):
 
 
 class AddressCreate(AddressBase):
-   pass
+   user_id : Optional[UUID] = None
+   seller_profile_id: Optional[UUID] = None
 
 
 class AddressUpdate(BaseSchemaConfig):
