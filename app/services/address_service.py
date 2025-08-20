@@ -40,7 +40,7 @@ class AddressService:
 
 
    async def get_addresses_by_seller_id(self, seller_id: UUID) -> List[AddressRead]:
-      addresses = await self.repository.get_addresses_by_user_id(seller_id)
+      addresses = await self.repository.get_addresses_by_seller_id(seller_id)
       return [AddressRead.model_validate(address) for address in addresses]
 
 

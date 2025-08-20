@@ -14,7 +14,7 @@ class DiscountBase(BaseModel, table=False):
 
     @property
     def is_currently_active(self) -> bool:
-        now = datetime.utcnow()
+        now = datetime.now()
         return self.is_active and self.start_at <= now <= self.end_at
     
 

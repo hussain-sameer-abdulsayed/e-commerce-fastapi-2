@@ -36,7 +36,7 @@ async def get_address_by_id(
    return await service.get_address(address_id)
 
 
-@router.get("/seller/{user_id}", response_model= List[AddressRead], status_code= status.HTTP_200_OK)
+@router.get("/user/{user_id}", response_model= List[AddressRead], status_code= status.HTTP_200_OK)
 async def get_addresses_by_user_id(
    user_id: UUID,
    service: AddressService = Depends(get_address_service)
@@ -52,7 +52,30 @@ async def get_addresses_by_seller_id(
    return await service.get_addresses_by_seller_id(seller_id)
 
 
+@router.post("/", response_model= AddressRead, status_code= status.HTTP_201_CREATED)
+async def create_address(
+   address: AddressCreate,
+   service: AddressService = Depends(get_address_service)
+):
+   ### should get user_id or seller_id from token sent
+   return await service.create(address)
 
+
+@router.put("/{address_id}", response_model= AddressRead, status_code= status.HTTP_200_OK)
+async def update_address(
+   address_id: UUID,
+   update_address: AddressUpdate,
+   service: AddressService = Depends(get_address_service)
+):
+   return await service.update(address_id, update_address)
+
+
+@router.delete("/{address_id}", status_code= status.HTTP_204_NO_CONTENT)
+async def delete_address(
+   address_id: UUID,
+   service: AddressService = Depends(get_address_service)
+):
+   return await service.delete(address_id)
 
 
 
