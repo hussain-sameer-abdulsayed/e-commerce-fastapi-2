@@ -19,11 +19,11 @@ class DiscountRepository:
 
    
    async def get_all(self, type: Discount_Model_Type) -> List[CategoryDiscount] | List[ProductDiscount] | List[ShipmentDiscount]:
-      if Discount_Model_Type == Discount_Model_Type.CATEGORY:
+      if type == Discount_Model_Type.CATEGORY:
          statement = select(CategoryDiscount).order_by(desc(CategoryDiscount.created_at))
-      elif Discount_Model_Type.PRODUCT:
+      elif type == Discount_Model_Type.PRODUCT:
          statement = select(ProductDiscount).order_by(desc(ProductDiscount.created_at))
-      elif Discount_Model_Type.SHIPMENT:
+      elif type == Discount_Model_Type.SHIPMENT:
          statement = select(ShipmentDiscount).order_by(desc(ShipmentDiscount.created_at))
       
       result = await self.db.execute(statement)
@@ -31,26 +31,28 @@ class DiscountRepository:
 
    
    async def get_by_active_status(self, type: Discount_Model_Type, is_active: bool) -> List[CategoryDiscount] | List[ProductDiscount] | List[ShipmentDiscount]:
+      now = datetime.now()
       if type == Discount_Model_Type.CATEGORY:
          statement = select(CategoryDiscount).order_by(desc(CategoryDiscount.created_at))
          if is_active:
-            statement = statement.where(CategoryDiscount.is_active == True)
+            
+            statement = statement.where(CategoryDiscount.is_active == True and CategoryDiscount.start_at <= now and CategoryDiscount.end_at >= now)
          else:
-            statement = statement.where(CategoryDiscount.is_active == False)
+            statement = statement.where(CategoryDiscount.is_active == False and CategoryDiscount.start_at > now and CategoryDiscount.end_at < now)
 
       elif type == Discount_Model_Type.PRODUCT:
          statement = select(ProductDiscount).order_by(desc(ProductDiscount.created_at))
          if is_active:
-            statement = statement.where(ProductDiscount.is_active == True)
+            statement = statement.where(ProductDiscount.is_active == True and ProductDiscount.start_at <= now and ProductDiscount.end_at >= now)
          else:
-            statement = statement.where(ProductDiscount.is_active == False)
+            statement = statement.where(ProductDiscount.is_active == False and CategoryDiscount.start_at > now and CategoryDiscount.end_at < now)
 
       elif type == Discount_Model_Type.SHIPMENT:
          statement = select(ShipmentDiscount).order_by(desc(ShipmentDiscount.created_at))
          if is_active:
-            statement = statement.where(ShipmentDiscount.is_active == True)
+            statement = statement.where(ShipmentDiscount.is_active == True and ShipmentDiscount.start_at <= now and ShipmentDiscount.end_at >= now)
          else:
-            statement = statement.where(ShipmentDiscount.is_active == False)
+            statement = statement.where(ShipmentDiscount.is_active == False and ShipmentDiscount.start_at > now and ShipmentDiscount.end_at < now)
       
       result = await self.db.execute(statement)
       return list(result.scalars().all())
@@ -122,7 +124,7 @@ class DiscountRepository:
 
    async def set_discount_status(self, id: UUID, status: DiscountSetStatus, type: Discount_Model_Type) -> bool:
       discount = await self.get_discount_by_id(id, type)
-      if not discount:
+      if not discount or discount.is_active == status.is_active:
          return False
       
       discount.is_active = status.is_active

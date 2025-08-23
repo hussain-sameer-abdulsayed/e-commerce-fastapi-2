@@ -8,6 +8,7 @@ from .cart_router import router as cart_router
 from .coupon_router import router as coupon_router
 from .address_router import router as address_router
 from .shipment_router import router as shipment_router
+from .discount_router import router as discount_router
 
 
 # Create main API router
@@ -50,6 +51,11 @@ api_router.include_router(
    tags=["Shipments"]
 )
 
+api_router.include_router(
+   discount_router,
+   prefix="/discounts",
+   tags=["Discounts"]
+)
 
 # Export the main router
 __all__ = ["api_router"]  # Fixed: Use double underscores
