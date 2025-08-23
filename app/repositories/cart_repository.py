@@ -145,6 +145,8 @@ class CartRepository:
       cart.coupon_id = coupon.id
       cart.coupon_amount = coupon.discount_amount * (cart.total or Decimal(0.00) / Decimal("100.00"))
       
+      cart.updated_at = datetime.utcnow()
+
       self.db.add(cart)
       await self.db.commit()
 
@@ -154,7 +156,6 @@ class CartRepository:
 
 
    async def clear_cart(self, cart_id: UUID) -> bool:
-      
       cart_items = await self.get_cart_items_by_cart_id(cart_id)
       if not cart_items:
          return True

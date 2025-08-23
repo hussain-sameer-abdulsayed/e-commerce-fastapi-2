@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from re import A
 from typing import List, Optional
 from uuid import UUID
@@ -47,6 +48,7 @@ class AddressRepository:
 
 
    async def update(self, address: Address) -> Address:
+      address.updated_at = datetime.utcnow()
       self.db.add(address)
       await self.db.commit()
       await self.db.refresh(address)

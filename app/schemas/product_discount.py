@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import Optional
-from .base_schema import BaseSchemaConfig, BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema, DiscountBase, DiscountUpdate
 from uuid import UUID
 
 
@@ -13,15 +13,12 @@ class ProductDiscountBase(BaseSchemaConfig):
    end_at: datetime
 
 
-class ProductDiscountCreate(ProductDiscountBase):
+class ProductDiscountCreate(DiscountBase):
    pass
 
 
-class ProductDiscountUpdate(BaseSchemaConfig):
-   discount_amount: Optional[int] = None
-   is_active: Optional[bool] = None
-   start_at: datetime
-   end_at: datetime
+class ProductDiscountUpdate(DiscountUpdate):
+   pass
 
 
 class ProductDiscountRead(ProductDiscountBase, BaseSchema):

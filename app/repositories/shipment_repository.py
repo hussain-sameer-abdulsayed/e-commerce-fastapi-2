@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -41,6 +42,7 @@ class ShipmentRepository:
 
    
    async def update(self, shipment: Shipment) -> Shipment:
+      shipment.updated_at = datetime.utcnow()
       self.db.add(shipment)
       await self.db.commit()
       await self.db.refresh(shipment)

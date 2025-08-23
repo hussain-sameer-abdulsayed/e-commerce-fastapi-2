@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
-from .base_schema import BaseSchemaConfig, BaseSchema
+from .base_schema import BaseSchemaConfig, BaseSchema, DiscountBase, DiscountUpdate
 
 
 class CategoryDiscountBase(BaseSchemaConfig):
@@ -13,17 +13,12 @@ class CategoryDiscountBase(BaseSchemaConfig):
    end_at: datetime
 
 
-class CategoryDiscountCreate(CategoryDiscountBase):
+class CategoryDiscountCreate(DiscountBase):
    pass
 
 
-class CategoryDiscountUpdate(BaseSchemaConfig):
-   category_id: Optional[UUID] = None
-   discount_amount: Optional[int] = None
-   is_active: Optional[bool] = None
-   start_at: Optional[datetime] = None
-   end_at: Optional[datetime] = None
-
+class CategoryDiscountUpdate(DiscountUpdate):
+   pass
 
 class CategoryDiscountRead(CategoryDiscountBase, BaseSchema):
    is_currently_active: bool

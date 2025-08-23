@@ -80,7 +80,6 @@ class CouponRepository:
       result = await self.db.execute(statement)
       return list(result.scalars().all())
 
-
    async def create(self, coupon: Coupon) -> Coupon:
       self.db.add(coupon)
 
@@ -153,8 +152,5 @@ class CouponRepository:
       )
       result = await self.db.execute(statement)
       return list(result.scalars().all())
-
-
-   
 
 
