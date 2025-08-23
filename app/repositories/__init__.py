@@ -5,6 +5,9 @@ from .coupon_repository import CouponRepository
 from .discount_repository import DiscountRepository
 from.product_repository import ProductRepository
 from .shipment_repository import ShipmentRepository
+from .user_repository import UserRepository
+from .user_profile_repository import UserProfileRepository
+from .seller_profile_repository import SellerProfileRepository
 
 
 __all__ = [
@@ -14,5 +17,8 @@ __all__ = [
    "CouponRepository",
    "DiscountRepository",
    "ProductRepository",
-   "ShipmentRepository"
+   "ShipmentRepository",
+   "UserRepository",
+   "UserProfileRepository",
+   "SellerProfileRepository"
 ]

@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 class UserBase(BaseModel, table=False):
    user_name: str = Field(default_factory=lambda: str(uuid4()),index=True, unique=True)
    full_name: str
-   phone_number: str
-   email: str = Field(index=True)
+   phone_number: Optional[str] = None
+   email: str
    password_hash: str
 
 

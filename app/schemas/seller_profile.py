@@ -4,6 +4,8 @@ from typing import Optional
 from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
+from pydantic_extra_types.phone_numbers import PhoneNumber
+PhoneNumber.phone_format = 'E164'
 
 
 
@@ -11,7 +13,7 @@ class SellerProfileBase(BaseSchemaConfig):
    store_name: str
    store_description: str
    main_image_url: str
-   store_phone_number: str
+   store_phone_number: PhoneNumber
 
 
 class SellerProfileCreate(SellerProfileBase):

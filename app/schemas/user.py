@@ -1,7 +1,10 @@
 from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, EmailStr
+from pydantic_extra_types.phone_numbers import PhoneNumber
+PhoneNumber.phone_format = 'E164'
+
 from .base_schema import BaseSchemaConfig, BaseSchema
 from uuid import UUID
 
@@ -15,8 +18,8 @@ class UserBase(BaseSchemaConfig):
 
 class UserCreate(UserBase):
    password: str = Field(min_length=6, max_length=100)
-   phone_number: str = Field(max_length=14, min_length=11)
-   email: str
+   phone_number: Optional[PhoneNumber] = None
+   email: EmailStr
 
 
 class UserUpdate(BaseSchemaConfig):
