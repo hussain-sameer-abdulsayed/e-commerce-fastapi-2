@@ -5,9 +5,16 @@ from fastapi import APIRouter, Query, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db
+from app.models.user import User
 from app.services.cart_service import CartService
 from app.schemas.cart import CartCreate, CartRead, CartWithItems
 from app.schemas.cart_item import CartItemCreate, CartItemRead, CartItemUpdate, CartItemWithProduct
+from app.authentication.auth_dependency import (
+   require_admin,
+   require_user,
+   get_current_verified_user,
+   get_current_active_user
+)
 
 
 
@@ -66,7 +73,8 @@ async def get_cart_total(
 async def add_item_to_cart(
    cart_id: UUID,
    cart_item_data: CartItemCreate,
-   service: CartService = Depends(get_cart_service)
+   service: CartService = Depends(get_cart_service),
+   current_user: User = Depends(require_user)
 ):
    return await service.add_cart_item(cart_id= cart_id, cart_item_data= cart_item_data)
 
@@ -75,7 +83,8 @@ async def add_item_to_cart(
 async def update_item_quantity(
    item_id: UUID,
    update_data: CartItemUpdate,
-   service: CartService = Depends(get_cart_service)
+   service: CartService = Depends(get_cart_service),
+   current_user: User = Depends(get_current_active_user)
 ):
    return await service.update_cart_item(cart_item_id= item_id, update_data= update_data)
 
@@ -83,7 +92,8 @@ async def update_item_quantity(
 @router.delete("/items/{item_id}",response_model= bool, status_code= status.HTTP_200_OK)
 async def remove_item_from_cart(
    item_id: UUID,
-   service: CartService = Depends(get_cart_service)
+   service: CartService = Depends(get_cart_service),
+   current_user: User = Depends(get_current_active_user)
 ):
    return await service.remove_cart_item(cart_item_id= item_id)
 
@@ -91,11 +101,9 @@ async def remove_item_from_cart(
 @router.delete("/{cart_id}", response_model= bool, status_code= status.HTTP_200_OK)
 async def clear_cart(
    cart_id: UUID,
-   service: CartService = Depends(get_cart_service)
+   service: CartService = Depends(get_cart_service),
+   current_user: User = Depends(get_current_active_user)
 ):
    return await service.clear_cart(cart_id= cart_id)
-
-
-
 
 

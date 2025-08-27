@@ -19,7 +19,6 @@ class ProductBase(BaseSchemaConfig):
 
 class ProductCreate(ProductBase):
    category_ids: List[UUID]
-   seller_profile_id: UUID
 
 
 class ProductUpdate(BaseSchemaConfig):

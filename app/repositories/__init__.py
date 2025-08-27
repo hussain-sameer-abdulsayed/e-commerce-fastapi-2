@@ -8,6 +8,8 @@ from .shipment_repository import ShipmentRepository
 from .user_repository import UserRepository
 from .user_profile_repository import UserProfileRepository
 from .seller_profile_repository import SellerProfileRepository
+from .auth_repository import AuthRepository
+from .order_repository import OrderRepository
 
 
 __all__ = [
@@ -20,5 +22,7 @@ __all__ = [
    "ShipmentRepository",
    "UserRepository",
    "UserProfileRepository",
-   "SellerProfileRepository"
+   "SellerProfileRepository",
+   "AuthRepository",
+   "OrderRepository"
 ]

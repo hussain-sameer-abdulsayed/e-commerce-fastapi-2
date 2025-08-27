@@ -8,9 +8,14 @@ from fastapi import HTTPException, status
 
 from app.db.database import get_db
 from app.enums.enums import Discount_Model_Type
+from app.models.user import User
 from app.services.discount_service import DiscountService
 from app.schemas.base_schema import DiscountSetStatus
 from app.schemas import CategoryDiscountCreate, CategoryDiscountRead, CategoryDiscountUpdate, ProductDiscountCreate, ProductDiscountRead, ProductDiscountUpdate, ShipmentDiscountCreate, ShipmentDiscountRead, ShipmentDiscountUpdate
+from app.authentication.auth_dependency import(
+   require_admin
+)
+
 
 list_response_model = Union[
    List[CategoryDiscountRead],
@@ -70,7 +75,8 @@ async def get_discounts_by_entity_id(
 @router.post("/", response_model= single_response_model, status_code= status.HTTP_201_CREATED)
 async def create(
    discount: CategoryDiscountCreate | ProductDiscountCreate | ShipmentDiscountCreate,
-   service: DiscountService = Depends(get_discount_service)
+   service: DiscountService = Depends(get_discount_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.create(discount)
 
@@ -80,7 +86,8 @@ async def update(
    type: Discount_Model_Type,
    discount_id: UUID,
    update_data: CategoryDiscountUpdate | ProductDiscountUpdate | ShipmentDiscountUpdate,
-   service: DiscountService = Depends(get_discount_service)
+   service: DiscountService = Depends(get_discount_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.update(discount_id, update_data, type)
 
@@ -89,7 +96,8 @@ async def update(
 async def delete(
    type: Discount_Model_Type,
    discount_id: UUID,
-   service: DiscountService = Depends(get_discount_service)
+   service: DiscountService = Depends(get_discount_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.delete(discount_id, type)
 
@@ -99,7 +107,8 @@ async def set_discount_status(
    type: Discount_Model_Type,
    discount_id: UUID,
    discount_status: DiscountSetStatus,
-   service: DiscountService = Depends(get_discount_service)
+   service: DiscountService = Depends(get_discount_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.set_discount_status(discount_id, discount_status, type)
 

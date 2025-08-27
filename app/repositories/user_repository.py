@@ -31,7 +31,7 @@ class UserRepository:
       return result.scalar_one_or_none()
 
 
-   async def get_by_username(self, username: UUID) -> Optional[User]:
+   async def get_by_username(self, username: str) -> Optional[User]:
       statement = select(User).where(User.user_name == username)
       result = await self.db.execute(statement)
       return result.scalar_one_or_none()

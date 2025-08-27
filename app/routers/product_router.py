@@ -4,9 +4,17 @@ from uuid import UUID
 from fastapi import HTTPException, APIRouter, Depends, Query, status
 from app.db.database import get_db
 
+from app.models.user import User
 from app.schemas.product import ProductRead, ProductCreate, ProductUpdate, ProductWithCategories
 from app.services.product_service import ProductService
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.authentication.auth_dependency import (
+    get_current_active_user,
+    get_current_verified_user,
+    require_admin,
+    require_seller,
+    require_user
+)
 
 
 router = APIRouter(
@@ -57,7 +65,6 @@ async def get_product_by_name(
    return await service.get_product_by_name(product_name)
 
 
-
 @router.get("/category/{category_id}", response_model= List[ProductRead], status_code= status.HTTP_200_OK)
 async def get_products_by_category_id(
    category_id: UUID,
@@ -79,31 +86,31 @@ async def get_products_by_seller_id(
 @router.post("/", response_model= ProductRead, status_code= status.HTTP_201_CREATED)
 async def create_product(
    product: ProductCreate,
+   current_user: User = Depends(require_seller),
    service: ProductService = Depends(get_product_service)
 ):
-   return await service.create_product(seller_id= product.seller_profile_id, product_data= product)
+   return await service.create_product(current_user.id, product_data= product)
 
 
 @router.put("/{product_id}", response_model= ProductRead, status_code= status.HTTP_200_OK)
 async def update_product(
    product_id: UUID,
-   seller_id: UUID,
    product_update: ProductUpdate,
+   current_user: User = Depends(get_current_verified_user),
    service: ProductService = Depends(get_product_service)
 ):
-   return await service.update_product(seller_id= seller_id, product_id= product_id, update_data= product_update)
+   ## here get product and check seller_id == product.seller_id
+   if current_user.role != "admin" and current_user.role != "seller" :
+      raise HTTPException(status_code=403, detail="Not authorized to update this product")
+   return await service.update_product(current_user.id, product_id= product_id, update_data= product_update)
 
 
 @router.delete("/{product_id}", response_model= bool, status_code= status.HTTP_200_OK)
 async def delete_product(
    product_id: UUID,
+   current_user: User = Depends(require_admin),
    service: ProductService = Depends(get_product_service)
 ):
    return await service.delete_product(product_id)
-
-
-
-
-
 
 

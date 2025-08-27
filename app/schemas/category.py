@@ -9,12 +9,13 @@ from .base_schema import BaseSchemaConfig, BaseSchema
 class CategoryBase(BaseSchemaConfig):
    name: str 
    description: str
-   main_image_url: Optional[str] = None
+   main_image_url: str
    
 
 
 class CategoryCreate(CategoryBase):
-   created_by_id : UUID
+   #created_by_id : UUID
+   pass
 
 
 class CategoryUpdate(BaseSchemaConfig):

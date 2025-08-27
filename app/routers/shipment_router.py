@@ -5,9 +5,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.enums.enums import Province
+from app.models.user import User
 from app.schemas.shipment import ShipmentCreate, ShipmentRead, ShipmentUpdate
 from app.db.database import get_db
 from app.services.shipment_service import ShipmentService
+from app.authentication.auth_dependency import (
+   require_admin,
+   get_current_active_user,
+   require_user
+)
+
 
 
 router = APIRouter(
@@ -45,7 +52,8 @@ async def get_by_province(
 @router.post("/", response_model= ShipmentRead, status_code= status.HTTP_201_CREATED)
 async def create_shipment(
    shipment: ShipmentCreate,
-   service: ShipmentService = Depends(get_shipment_service)
+   service: ShipmentService = Depends(get_shipment_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.create(shipment)
 
@@ -54,7 +62,8 @@ async def create_shipment(
 async def update_shipment(
    shipment_id: UUID,
    update_data: ShipmentUpdate,
-   service: ShipmentService = Depends(get_shipment_service)
+   service: ShipmentService = Depends(get_shipment_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.update(shipment_id, update_data)
 
@@ -62,7 +71,8 @@ async def update_shipment(
 @router.delete("/{shipment_id}", status_code= status.HTTP_204_NO_CONTENT)
 async def delete_shipment(
    shipment_id: UUID,
-   service: ShipmentService = Depends(get_shipment_service)
+   service: ShipmentService = Depends(get_shipment_service),
+   current_user: User = Depends(require_admin)
 ):
    return await service.delete(shipment_id)
 

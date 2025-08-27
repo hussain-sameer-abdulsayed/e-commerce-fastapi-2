@@ -1,11 +1,19 @@
 from __future__ import annotations
 from fastapi import HTTPException, APIRouter, Depends, Query, status
+from app.models.user import User
 from app.services.category_service import CategoryService
 from app.db.database import get_db
 from app.schemas import CategoryCreate, CategoryRead, CategoryUpdate, CategoryWithProducts
 from uuid import UUID
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.authentication.auth_dependency import (
+    get_current_active_user,
+    get_current_verified_user,
+    require_admin,
+    require_seller,
+    require_user
+)
 
 
 
@@ -72,16 +80,18 @@ async def get_category_by_name(
 @router.post("/", response_model=CategoryRead, status_code=status.HTTP_201_CREATED)
 async def create_category(
     category: CategoryCreate,
+    current_user: User = Depends(require_admin),
     service: CategoryService = Depends(get_category_service)
 ):
     """Create a new category"""
-    return await service.create_category(category.created_by_id, category)
+    return await service.create_category(current_user.id, category)
 
 
 @router.put("/{category_id}", response_model=CategoryRead, status_code=status.HTTP_200_OK)
 async def update_category(
     category_id: UUID,
     category_update: CategoryUpdate,
+    current_user: User = Depends(require_admin),
     service: CategoryService = Depends(get_category_service)
 ):
     """Update category"""
@@ -91,9 +101,9 @@ async def update_category(
 @router.delete("/{category_id}", response_model= bool, status_code=status.HTTP_200_OK)
 async def delete_category(
     category_id: UUID,
+    current_user: User = Depends(require_admin),
     service: CategoryService = Depends(get_category_service)
 ):
     return await service.delete_category(category_id)
-
 
 

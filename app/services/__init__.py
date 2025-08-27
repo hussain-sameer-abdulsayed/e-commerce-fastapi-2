@@ -5,6 +5,9 @@ from .cart_service import CartService
 from .coupon_service import CouponService
 from .shipment_service import ShipmentService
 from .discount_service import DiscountService
+from .user_service import UserService
+from .user_profile_service import UserProfileService
+from .seller_profile_service import SellerProfileService
 
 
 __all__ = [
@@ -14,5 +17,8 @@ __all__ = [
    "CartService",
    "CouponService",
    "ShipmentService",
-   "DiscountService"
+   "DiscountService",
+   "UserService",
+   "UserProfileService",
+   "SellerProfileService"
 ]

@@ -103,7 +103,12 @@ class CategoryService:
                detail= f"Category with name '{category_data.name}' already exists"
             )
       # create category
-      category = Category(**category_data.model_dump())
+      category = Category(
+         name = category_data.name,
+         description = category_data.description,
+         main_image_url = category_data.main_image_url,
+         created_by_id = user_id
+      )
 
       ## save to database
       created_category = await self.repository.create(category)

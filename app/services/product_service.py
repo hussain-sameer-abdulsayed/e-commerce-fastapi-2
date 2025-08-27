@@ -9,6 +9,7 @@ from sqlalchemy import or_, text
 
 from app.models.product import Product
 from app.models.seller_profile import SellerProfile
+from app.repositories.seller_profile_repository import SellerProfileRepository
 from app.schemas.product import ProductCreate, ProductRead, ProductUpdate, ProductWithCategories
 from app.repositories.product_repository import ProductRepository
 from app.repositories.category_repository import CategoryRepository
@@ -20,6 +21,7 @@ class ProductService:
       self.db = db
       self.repository = ProductRepository(db)
       self.category_repository = CategoryRepository(db)
+      self.seller_profile_repository = SellerProfileRepository(db)
 
 
 
@@ -104,11 +106,11 @@ class ProductService:
       return [ProductRead.model_validate(product) for product in products]
 
 
-   async def create_product(self, seller_id: UUID, product_data: ProductCreate) -> ProductRead:
+   async def create_product(self, user_id: UUID, product_data: ProductCreate) -> ProductRead:
 
 
-      if seller_id:
-         seller = await self.db.get(SellerProfile, seller_id)
+      if user_id:
+         seller = await self.seller_profile_repository.get_by_user_id(user_id)
          if not seller:
             raise HTTPException(
                status_code= status.HTTP_400_BAD_REQUEST,
@@ -130,7 +132,7 @@ class ProductService:
          stock_quantity= product_data.stock_quantity,
          description= product_data.description,
          main_image_url= product_data.main_image_url,
-         seller_profile_id= seller_id,
+         seller_profile_id= seller.id,
          categories= categories
       )
 
@@ -151,7 +153,7 @@ class ProductService:
 
    async def update_product(
     self,
-    seller_id: UUID,
+    user_id: UUID,
     product_id: UUID,
     update_data: ProductUpdate
 ) -> ProductRead:
@@ -163,7 +165,7 @@ class ProductService:
             detail="Product not found"
         )
 
-    seller = await self.db.get(SellerProfile, seller_id)
+    seller = await self.seller_profile_repository.get_by_user_id(user_id)
     if not seller or product.seller_profile_id != seller.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -197,8 +199,5 @@ class ProductService:
 
     updated_product = await self.repository.update(product)
     return ProductRead.model_validate(updated_product)
-
-
-
 
 

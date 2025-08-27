@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.address import Address
 from app.models.seller_profile import SellerProfile
 from app.models.user import User
+from app.repositories.seller_profile_repository import SellerProfileRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.address import AddressCreate, AddressRead, AddressUpdate
 from app.repositories.address_repository import AddressRepository
 
@@ -17,6 +19,8 @@ class AddressService:
    def __init__(self, db: AsyncSession):
       self.db = db
       self.repository = AddressRepository(db)
+      self.user_repository = UserRepository(db)
+      self.seller_repository = SellerProfileRepository(db)
    
 
    async def get_all(self) -> List[AddressRead]:
@@ -44,9 +48,9 @@ class AddressService:
       return [AddressRead.model_validate(address) for address in addresses]
 
 
-   async def create(self, address_data: AddressCreate) -> AddressRead:
-      if address_data.user_id:
-         user = await self.db.get(User, address_data.user_id)
+   async def create(self, user_id: UUID, address_data: AddressCreate) -> AddressRead:
+      if not address_data.is_store_address:
+         user = await self.user_repository.get_by_id(user_id)
          if not user:
             raise HTTPException(
                   status_code=status.HTTP_400_BAD_REQUEST,
@@ -54,7 +58,7 @@ class AddressService:
                 )
 
       else:
-         seller = await self.db.get(SellerProfile, address_data.seller_profile_id)
+         seller = await self.seller_repository.get_by_user_id(user_id)
          if not seller:
             raise HTTPException(
                   status_code=status.HTTP_400_BAD_REQUEST,

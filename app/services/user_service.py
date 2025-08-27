@@ -41,7 +41,7 @@ class UserService:
       return UserRead.model_validate(user)
    
 
-   async def get_by_username(self, username: UUID) -> Optional[UserRead]:
+   async def get_by_username(self, username: str) -> Optional[UserRead]:
       user = await self.repository.get_by_username(username)
       if not user:
          raise HTTPException(
@@ -71,7 +71,7 @@ class UserService:
       return UserRead.model_validate(user)
 
 
-   async def updated(self, user_id: UUID, update_data: UserUpdate) -> UserRead:
+   async def update(self, user_id: UUID, update_data: UserUpdate) -> UserRead:
       user = await self.repository.get_by_id(user_id)
       if not user:
          raise HTTPException(

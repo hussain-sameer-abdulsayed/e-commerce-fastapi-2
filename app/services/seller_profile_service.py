@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.seller_profile import SellerProfile
 from app.models.user import User
 from app.repositories.seller_profile_repository import SellerProfileRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.seller_profile import SellerProfileCreate, SellerProfileRead, SellerProfileUpdate
 
 
@@ -15,23 +16,24 @@ class SellerProfileService:
     def __init__(self, db: AsyncSession):
         self.db = db
         self.repository = SellerProfileRepository(db)
+        self.user_repository = UserRepository(db)
     
-    async def get_all_sellers(self) -> List[SellerProfileRead]:
+    async def get_all(self) -> List[SellerProfileRead]:
         sellers = await self.repository.get_all()
         return [SellerProfileRead.model_validate(seller) for seller in sellers]
     
 
-    async def get_all_active_sellers(self, is_active: bool) -> List[SellerProfileRead]:
+    async def get_all_active(self, is_active: bool) -> List[SellerProfileRead]:
         sellers = await self.repository.get_all_active(is_active)
         return [SellerProfileRead.model_validate(seller) for seller in sellers]
     
 
-    async def get_all_verified_sellers(self, is_verified: bool) -> List[SellerProfileRead]:
+    async def get_all_verified(self, is_verified: bool) -> List[SellerProfileRead]:
         sellers = await self.repository.get_all_verified(is_verified)
         return [SellerProfileRead.model_validate(seller) for seller in sellers]
     
 
-    async def get_seller_by_id(self, seller_id: UUID) -> SellerProfileRead:
+    async def get_by_id(self, seller_id: UUID) -> SellerProfileRead:
         seller = await self.repository.get_by_id(seller_id)
         if not seller:
             raise HTTPException(
@@ -41,7 +43,7 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(seller)
     
 
-    async def get_seller_by_user_id(self, user_id: UUID) -> SellerProfileRead:
+    async def get_by_user_id(self, user_id: UUID) -> SellerProfileRead:
         seller = await self.repository.get_by_user_id(user_id)
         if not seller:
             raise HTTPException(
@@ -51,7 +53,7 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(seller)
     
 
-    async def get_seller_by_store_name(self, store_name: str) -> SellerProfileRead:
+    async def get_by_store_name(self, store_name: str) -> SellerProfileRead:
         seller = await self.repository.get_by_store_name(store_name)
         if not seller:
             raise HTTPException(
@@ -61,7 +63,17 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(seller)
     
 
-    async def get_seller_with_user(self, seller_id: UUID) -> SellerProfile:
+    async def get_by_phone(self, phone: str) -> SellerProfileRead:
+        seller = await self.repository.get_by_phone(phone)
+        if not seller:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Seller profile not found"
+            )
+        return SellerProfileRead.model_validate(seller)
+    
+
+    async def get_with_user(self, seller_id: UUID) -> SellerProfile:
         seller = await self.repository.get_with_user(seller_id)
         if not seller:
             raise HTTPException(
@@ -71,17 +83,25 @@ class SellerProfileService:
         return seller
     
     
-    async def create_seller_profile(self, seller_data: SellerProfileCreate, exclude_id: UUID) -> SellerProfileRead:
+    async def create(self, seller_data: SellerProfileCreate) -> SellerProfileRead:
         # Check if user exists
-        user = await self.db.get(User, seller_data.user_id)
+        user = await self.user_repository.get_by_id(seller_data.user_id)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User does not exist"
             )
         
+        exists = await self.repository.get_by_user_id(seller_data.user_id)
+        if exists:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail= f"User with username {user.user_name} has a profile"
+            )
+
+
         # Check if store name already exists
-        if await self.repository.exists_by_store_name(seller_data.store_name, exclude_id):
+        if await self.repository.exists_by_store_name(seller_data.store_name, user.id):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Store with name '{seller_data.store_name}' already exists"
@@ -89,7 +109,7 @@ class SellerProfileService:
         
         # Check if phone number already exists
         phone_str = str(seller_data.store_phone_number)
-        if await self.repository.exists_by_store_phone(phone_str, exclude_id):
+        if await self.repository.exists_by_store_phone(phone_str, user.id):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Store with phone number '{phone_str}' already exists"
@@ -106,7 +126,7 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(created_seller)
     
 
-    async def update_seller_profile(self, seller_id: UUID, update_data: SellerProfileUpdate) -> SellerProfileRead:
+    async def update(self, seller_id: UUID, update_data: SellerProfileUpdate) -> SellerProfileRead:
         seller = await self.repository.get_by_id(seller_id)
         if not seller:
             raise HTTPException(
@@ -148,7 +168,7 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(updated_seller)
     
 
-    async def update_seller_by_user_id(self, user_id: UUID, update_data: SellerProfileUpdate) -> SellerProfileRead:
+    async def update_profile_by_user_id(self, user_id: UUID, update_data: SellerProfileUpdate) -> SellerProfileRead:
         seller = await self.repository.get_by_user_id(user_id)
         if not seller:
             raise HTTPException(
@@ -156,7 +176,7 @@ class SellerProfileService:
                 detail="Seller profile not found"
             )
         
-        return await self.update_seller_profile(seller.id, update_data)
+        return await self.update(seller.id, update_data)
     
 
     async def verify_seller(self, seller_id: UUID) -> SellerProfileRead:
@@ -189,7 +209,7 @@ class SellerProfileService:
         return SellerProfileRead.model_validate(seller)
     
 
-    async def delete_seller_profile(self, seller_id: UUID) -> bool:
+    async def delete(self, seller_id: UUID) -> bool:
         result = await self.repository.delete(seller_id)
         if not result:
             raise HTTPException(
@@ -199,7 +219,7 @@ class SellerProfileService:
         return result
     
 
-    async def delete_seller_by_user_id(self, user_id: UUID) -> bool:
+    async def delete_profile_by_user_id(self, user_id: UUID) -> bool:
         seller = await self.repository.get_by_user_id(user_id)
         if not seller:
             raise HTTPException(
