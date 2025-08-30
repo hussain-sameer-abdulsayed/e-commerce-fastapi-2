@@ -8,6 +8,7 @@ from .discount_service import DiscountService
 from .user_service import UserService
 from .user_profile_service import UserProfileService
 from .seller_profile_service import SellerProfileService
+from .image_service import ImageService
 
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
    "DiscountService",
    "UserService",
    "UserProfileService",
-   "SellerProfileService"
+   "SellerProfileService",
+   "ImageService"
 ]

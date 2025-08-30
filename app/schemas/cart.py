@@ -29,7 +29,7 @@ class CartRead(CartBase, BaseSchema):
 
 
 class CartWithItems(CartRead):
-   cart_items: Optional[List["CartItemWithProduct"]] = None
+   cart_items: List["CartItemWithProduct"] = []
 
 
 try:

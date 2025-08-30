@@ -15,45 +15,48 @@ from .shipment_discount import ShipmentDiscountCreate, ShipmentDiscountRead, Shi
 from .shipment import ShipmentCreate, ShipmentRead, ShipmentUpdate
 from .user_profile import UserProfileCreate, UserProfileRead, UserProfileUpdate
 from .user import UserCreate, UserRead, UserUpdate
-
+from .image import ImageCreate, ImageRead, ImageUpdate
+from .base_schema import BaseSchemaConfig, BaseSchema
 
 # Exported schemas for easy importing
 __all__ = [
     # Base
-    "BaseSchemaConfig",
-    
+    "BaseSchemaConfig", "BaseSchema"
     # User
-    "UserBase", "UserCreate", "UserUpdate", "UserRead",
-    "UserProfileBase", "UserProfileCreate", "UserProfileUpdate", "UserProfileRead",
+    "UserCreate", "UserUpdate", "UserRead",
+    , "UserProfileCreate", "UserProfileUpdate", "UserProfileRead", # type: ignore
     
     # Seller
     "SellerProfileBase", "SellerProfileCreate", "SellerProfileUpdate", "SellerProfileRead",
     
     # Address
-    "AddressBase", "AddressCreate", "AddressUpdate", "AddressRead",
+    "AddressCreate", "AddressUpdate", "AddressRead",
     
     # Category
-    "CategoryBase", "CategoryCreate", "CategoryUpdate", "CategoryRead", "CategoryWithProducts", "CategoryDiscountBase", "CategoryDiscountCreate", "CategoryDiscountUpdate", "CategoryDiscountRead",
+    "CategoryCreate", "CategoryUpdate", "CategoryRead", "CategoryWithProducts", "CategoryDiscountCreate", "CategoryDiscountUpdate", "CategoryDiscountRead",
     
     # Product
-    "ProductBase", "ProductCreate", "ProductUpdate", "ProductRead",
-    "ProductDiscountBase", "ProductDiscountCreate", "ProductDiscountUpdate", "ProductDiscountRead",
-    "ProductReviewBase", "ProductReviewCreate", "ProductReviewUpdate", "ProductReviewRead",
+    "ProductCreate", "ProductUpdate", "ProductRead",
+    "ProductDiscountCreate", "ProductDiscountUpdate", "ProductDiscountRead",
+    "ProductReviewCreate", "ProductReviewUpdate", "ProductReviewRead",
     
     # Cart
-    "CartBase", "CartCreate", "CartRead", "CartWithItems",
-    "CartItemBase", "CartItemCreate", "CartItemUpdate", "CartItemRead",
+    "CartCreate", "CartRead", "CartWithItems",
+    "CartItemCreate", "CartItemUpdate", "CartItemRead",
     
     # Order
-    "OrderBase", "OrderCreate", "OrderUpdate", "OrderRead", "OrderWithItems",
-    "OrderItemBase", "OrderItemCreate", "OrderItemUpdate", "OrderItemRead",
+    "OrderCreate", "OrderUpdate", "OrderRead", "OrderWithItems",
+    "OrderItemCreate", "OrderItemUpdate", "OrderItemRead",
     
     # Coupon
-    "CouponBase", "CouponCreate", "CouponUpdate", "CouponRead",
-    "CouponUsageBase", "CouponUsageCreate", "CouponUsageRead",
+    "CouponCreate", "CouponUpdate", "CouponRead",
+    "CouponUsageCreate", "CouponUsageRead",
     "CouponSetStatus"
     
     # Shipment
-    "ShipmentBase", "ShipmentCreate", "ShipmentUpdate", "ShipmentRead",
-    "ShipmentDiscountBase", "ShipmentDiscountCreate", "ShipmentDiscountUpdate", "ShipmentDiscountRead",
+    "ShipmentCreate", "ShipmentUpdate", "ShipmentRead",
+    "ShipmentDiscountCreate", "ShipmentDiscountUpdate", "ShipmentDiscountRead",
+
+    # Image
+    "ImageCreate", "ImageRead", "ImageUpdate"
 ]

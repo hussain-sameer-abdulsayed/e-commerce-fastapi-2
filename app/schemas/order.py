@@ -45,7 +45,7 @@ class OrderRead(OrderBase, BaseSchema):
 
 
 class OrderWithItems(OrderRead):
-    order_items: List["OrderItemRead"]
+    order_items: List["OrderItemRead"] = []
 
 
 try:

@@ -7,18 +7,15 @@ from app.enums.enums import Gender
 from app.models.base_model import BaseModel
 
 if TYPE_CHECKING:
-   from app.models import ProductReview, User, Order
+   from app.models import ProductReview, User, Order, Image
 
    
 
 class UserProfileBase(BaseModel, table=False):
-   main_image_url: str
    bio: str
    gender: Gender = Field(default=Gender.MALE)
    birth_date: date
-   
    user_id: UUID = Field(foreign_key="users.id", index=True)
-   
 
 
 class UserProfile(UserProfileBase, table=True):
@@ -29,6 +26,11 @@ class UserProfile(UserProfileBase, table=True):
    product_reviews: List["ProductReview"] = Relationship(
       back_populates="user_profile", 
       cascade_delete=True,
+      sa_relationship_kwargs={'lazy': 'selectin'}
+   )
+   images: List["Image"] = Relationship(
+      back_populates= "user_profile",
+      cascade_delete= True,
       sa_relationship_kwargs={'lazy': 'selectin'}
    )
 

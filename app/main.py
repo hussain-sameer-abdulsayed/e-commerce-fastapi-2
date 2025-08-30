@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv  # Add this import
@@ -98,6 +98,15 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {
+
+
+        
         "status": "healthy",
         "message": "E-commerce API is running successfully"
     }
+
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    return {"filename": file.filename}
+

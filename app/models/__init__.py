@@ -7,6 +7,8 @@ SQLModel database models with careful import order
 from .user import User, UserBase
 from .category import Category, CategoryBase
 
+from .image import Image, ImageBase
+
 # Import link tables early
 from .product_category import ProductCategoryLink
 
@@ -44,5 +46,5 @@ __all__ = [
     "CartItem", "CartItemBase", "Coupon", "CouponBase",
     "CouponUsage", "CouponUsageBase", "Shipment", "ShipmentBase",
     "ShipmentDiscount", "Order", "OrderBase",
-    "OrderItem", "OrderItemBase",
+    "OrderItem", "OrderItemBase", "Image", "ImageBase"
 ]

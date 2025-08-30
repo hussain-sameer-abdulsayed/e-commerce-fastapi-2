@@ -55,8 +55,23 @@ class OrderService:
       pass
 
 
-   async def update(self, order_data: OrderCreate):
-      pass
+   async def update(self, order_id: UUID, update_data: OrderUpdate):
+      order = await self.repository.get_by_id(order_id)
+      if not order:
+         raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="Order not found"
+         )
+      
+      data_dict = update_data.model_dump(exclude_unset= True)
+
+      for field, value in data_dict.items():
+         if hasattr(order, field) and value is not None:
+            setattr(order, field, value)
+
+      updated_order = await self.repository.update(order)
+
+      return OrderRead.model_validate(updated_order)
 
 
    async def delete(self, order_id: UUID) -> bool:

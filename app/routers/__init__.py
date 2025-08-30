@@ -13,6 +13,7 @@ from .user_router import router as user_router
 from .user_profile_router import router as user_profile_router
 from .seller_profile_router import router as seller_profile_router
 from .auth_router import router as auth_router
+from .image_router import router as image_router
 
 # Create main API router
 api_router = APIRouter()
@@ -83,6 +84,13 @@ api_router.include_router(
    prefix="/auth", 
    tags=["Authentication"]
 )
+
+api_router.include_router(
+   image_router,
+   prefix="/images",
+   tags=["Images"]
+)
+
 
 # Export the main router
 __all__ = ["api_router"]  # Fixed: Use double underscores

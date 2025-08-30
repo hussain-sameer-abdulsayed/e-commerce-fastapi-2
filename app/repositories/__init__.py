@@ -10,6 +10,7 @@ from .user_profile_repository import UserProfileRepository
 from .seller_profile_repository import SellerProfileRepository
 from .auth_repository import AuthRepository
 from .order_repository import OrderRepository
+from .image_repository import ImageRepository
 
 
 __all__ = [
@@ -24,5 +25,6 @@ __all__ = [
    "UserProfileRepository",
    "SellerProfileRepository",
    "AuthRepository",
-   "OrderRepository"
+   "OrderRepository",
+   "ImageRepository"
 ]
