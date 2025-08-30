@@ -1,10 +1,18 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from app.models.image import Image
+from app.models import Product, Category, Image, UserProfile, SellerProfile
 
+
+Entitytypes = Union[Category, Product, UserProfile, SellerProfile]
+ENTITY_MODEL_MAP = {
+   "product": Product,
+   "category": Category,
+   "user_profile": UserProfile,
+   "seller_profile": SellerProfile
+}
 
 class ImageRepository:
    def __init__(self, db: AsyncSession):
@@ -60,4 +68,14 @@ class ImageRepository:
       result = await self.db.execute(statement)
       return len(list(result.scalars().all()))
 
+
+   async def get_entity(self, entity: str, entity_id: UUID) -> Optional[Entitytypes]:
+      model = ENTITY_MODEL_MAP.get(entity)
+      if not model:
+         return None
+
+      statement = select(model).where(model.id == entity_id)
+      result = await self.db.execute(statement)
+      return result.scalar_one_or_none()
+   
 

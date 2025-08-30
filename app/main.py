@@ -11,6 +11,11 @@ from app.db.database import engine
 from app.db.seeder import seed_database
 from sqlmodel import SQLModel
 
+
+from fastapi.staticfiles import StaticFiles
+
+
+
 # Import all your models...
 from app.models.user import User
 from app.models.user_profile import UserProfile
@@ -106,7 +111,12 @@ async def health_check():
     }
 
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    return {"filename": file.filename}
 
+# @app.post("/uploadfile/")
+# async def create_upload_file(file: UploadFile = File(...)):
+#     return {"filename": file.filename}
+
+
+
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")

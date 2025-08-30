@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 class ImageBase(BaseModel, table= False):
    file_name: str = Field(index = True)
    original_file_name: str
-   file_path: str
    file_size: int = Field(ge=0) # in bytes
    mime_type: str
 

@@ -85,11 +85,11 @@ async def get_products_by_seller_id(
 
 @router.post("/", response_model= ProductRead, status_code= status.HTTP_201_CREATED)
 async def create_product(
-   product: ProductCreate,
+   product_data: ProductCreate,
    current_user: User = Depends(require_seller),
    service: ProductService = Depends(get_product_service)
 ):
-   return await service.create_product(current_user.id, product_data= product)
+   return await service.create_product(current_user.id, product_data= product_data)
 
 
 @router.put("/{product_id}", response_model= ProductRead, status_code= status.HTTP_200_OK)

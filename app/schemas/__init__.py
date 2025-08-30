@@ -24,7 +24,7 @@ __all__ = [
     "BaseSchemaConfig", "BaseSchema"
     # User
     "UserCreate", "UserUpdate", "UserRead",
-    , "UserProfileCreate", "UserProfileUpdate", "UserProfileRead", # type: ignore
+    "UserProfileCreate", "UserProfileUpdate", "UserProfileRead", # type: ignore
     
     # Seller
     "SellerProfileBase", "SellerProfileCreate", "SellerProfileUpdate", "SellerProfileRead",
